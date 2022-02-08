@@ -15,7 +15,8 @@ class Login extends Component {
   login = async () => {
     //Validation eventually
 
-    return fetch("http://localhost:3333/api/1.0.0/login", {
+    //Change the IP to localhost when at uni/find IP Address
+    return fetch("http://192.168.1.31:3333/api/1.0.0/login", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
