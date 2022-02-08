@@ -1,22 +1,21 @@
 import { Component } from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-class SignUp extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      first_name: "",
-      last_name: "",
       email: "",
       password: "",
     };
   }
 
-  signUp = () => {
+  login = async () => {
     //Validation eventually
 
-    return fetch("http://localhost:3333/api/1.0.0/user", {
+    return fetch("http://localhost:3333/api/1.0.0/login", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -24,29 +23,22 @@ class SignUp extends Component {
       body: JSON.stringify(this.state),
     })
       .then((response) => {
-        if (response.status === 201) {
+        if (response.status === 200) {
           return response.json();
         } else if (response.status === 400) {
-          throw "Failed Validation";
+          throw "Invalid email or password";
         } else {
           throw "Something went wrong";
         }
       })
-      .then((responseJson) => {
-        console.log("User created with ID: ", responseJson);
-        this.props.navigation.navigate("Main Menu");
+      .then(async (responseJson) => {
+        console.log(responseJson);
+        await AsyncStorage.setItem("@session_token", responseJson.token);
+        //Navigate to home screen
       })
       .catch((error) => {
         console.log(error);
       });
-  };
-
-  handleFirstname = (firstname) => {
-    this.setState({ first_name: firstname });
-  };
-
-  handleLastname = (lastname) => {
-    this.setState({ last_name: lastname });
   };
 
   handleEmail = (email) => {
@@ -61,18 +53,6 @@ class SignUp extends Component {
     return (
       <View style={styles.container}>
         <TextInput
-          placeholder="Firstname..."
-          style={styles.textInput}
-          onChangeText={this.handleFirstname}
-          value={this.state.firstname}
-        />
-        <TextInput
-          placeholder="Lastname..."
-          style={styles.textInput}
-          onChangeText={this.handleLastname}
-          value={this.state.lastname}
-        />
-        <TextInput
           placeholder="Email..."
           style={styles.textInput}
           onChangeText={this.handleEmail}
@@ -84,7 +64,7 @@ class SignUp extends Component {
           onChangeText={this.handlePassword}
           value={this.state.password}
         />
-        <Button title="Sign Up" onPress={this.signUp} />
+        <Button title="Login" onPress={this.login} />
       </View>
     );
   }
@@ -103,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUp;
+export default Login;
