@@ -15,8 +15,8 @@ class Login extends Component {
   login = async () => {
     //Validation eventually
 
-    //Change the IP to localhost when at uni/find IP Address
-    return fetch("http://192.168.1.31:3333/api/1.0.0/login", {
+    //Change the IP to 10.182.67.77 when at uni/find IP Address
+    return fetch("http://10.182.67.77:3333/api/1.0.0/login", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +35,8 @@ class Login extends Component {
       .then(async (responseJson) => {
         console.log(responseJson);
         await AsyncStorage.setItem("@session_token", responseJson.token);
-        //Navigate to home screen
+        await AsyncStorage.setItem("@user_id", responseJson.id.toString());
+        this.props.navigation.navigate("Home");
       })
       .catch((error) => {
         console.log(error);
