@@ -1,13 +1,68 @@
 import { Component } from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class TopBar extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      query: "",
+    };
+  }
+  toggleSideNav = () => {
+    this.props.navigation.openDrawer();
+  };
+
+  search = async () => {
+    // this.props.navigation.navigate("Search");
+    let token = await AsyncStorage.getItem("@session_token");
+    return fetch(
+      "http://192.168.1.31:3333/api/1.0.0/search?q=".concat(
+        this.state.query,
+        "&search_in=all"
+      ),
+      {
+        method: "get",
+        headers: {
+          "X-Authorization": token,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else if (response.status === 400) {
+          throw "Bad Request";
+        } else if (response.status === 401) {
+          this.props.navigation.navigate("Login");
+        } else {
+          throw "Something went wrong";
+        }
+      })
+      .then((responseJson) => {
+        console.log(responseJson);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  handleQuery = (query) => {
+    this.setState({ query: query });
+  };
+
   render() {
     return (
       <View style={styles.container}>
-        <Button title="Temp" />
-        <TextInput placeholder="Search..." />
-        <Button title="Search" />
+        <Button title="Temp" onPress={this.toggleSideNav} />
+        <TextInput
+          placeholder="Search..."
+          style={{ width: 150 }}
+          onChangeText={this.handleQuery}
+          value={this.state.query}
+        />
+        <Button title="Search" onPress={this.search} />
       </View>
     );
   }

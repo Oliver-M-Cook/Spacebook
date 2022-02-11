@@ -1,21 +1,18 @@
+import "react-native-gesture-handler";
+
 import { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import TopBar from "./TopBar";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import Feed from "./Feed";
+import CustomDrawerContent from "./CustomDrawerContent";
+import DrawerNavigator from "./navigators/DrawerNavigator";
+import AuthStackNavigator from "./navigators/AuthStackNavigator";
+
+const Drawer = createDrawerNavigator();
 
 class Home extends Component {
   render() {
-    return (
-      <View style={styles.container}>
-        <TopBar></TopBar>
-      </View>
-    );
+    return <DrawerNavigator />;
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default Home;
