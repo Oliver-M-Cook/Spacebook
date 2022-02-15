@@ -8,6 +8,7 @@ class TopBar extends Component {
 
     this.state = {
       query: "",
+      output: "",
     };
   }
   toggleSideNav = () => {
@@ -18,7 +19,7 @@ class TopBar extends Component {
     // this.props.navigation.navigate("Search");
     let token = await AsyncStorage.getItem("@session_token");
     return fetch(
-      "http://192.168.1.31:3333/api/1.0.0/search?q=".concat(
+      "http://10.182.67.77:3333/api/1.0.0/search?q=".concat(
         this.state.query,
         "&search_in=all"
       ),
@@ -41,7 +42,10 @@ class TopBar extends Component {
         }
       })
       .then((responseJson) => {
-        console.log(responseJson);
+        this.setState({ output: JSON.stringify(responseJson) });
+        this.props.navigation.navigate("Search", {
+          output: this.state.output,
+        });
       })
       .catch((error) => {
         console.log(error);

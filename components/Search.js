@@ -3,9 +3,10 @@ import { Text, View } from "react-native";
 
 class Search extends Component {
   render() {
+    console.log(this.props.route.params.output);
     return (
       <View>
-        <Text>This will be the search output</Text>
+        <Text>{this.props.route.params.output}</Text>
       </View>
     );
   }
