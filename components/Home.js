@@ -1,5 +1,3 @@
-import "react-native-gesture-handler";
-
 import { Component } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Feed from "./Feed";
