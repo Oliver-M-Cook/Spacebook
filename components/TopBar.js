@@ -1,6 +1,15 @@
 import { Component } from "react";
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import {
+  Button,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getProfilePicture } from "./Functions/FunctionStorage";
 
 class TopBar extends Component {
   constructor(props) {
@@ -10,6 +19,7 @@ class TopBar extends Component {
       query: "",
       output: "",
       userIDs: [],
+      userProfilePicture: "",
     };
   }
   toggleSideNav = () => {
@@ -62,17 +72,51 @@ class TopBar extends Component {
     this.setState({ query: query });
   };
 
+  async componentDidMount() {
+    let userID = await AsyncStorage.getItem("@user_id");
+    getProfilePicture(userID).then((imageURI) => {
+      this.setState({
+        userProfilePicture: imageURI,
+      });
+    });
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Button title="Temp" onPress={this.toggleSideNav} />
+        <TouchableOpacity onPress={this.toggleSideNav}>
+          <Image
+            source={{ uri: this.state.userProfilePicture }}
+            style={{
+              width: 50,
+              height: 50,
+              borderWidth: 2,
+              borderRadius: 25,
+              borderColor: "#6699ff",
+            }}
+          />
+        </TouchableOpacity>
         <TextInput
           placeholder="Search..."
           style={{ width: 150 }}
           onChangeText={this.handleQuery}
           value={this.state.query}
         />
-        <Button title="Search" onPress={this.search} />
+        {/* <Button title="Search" onPress={this.search} /> */}
+        <TouchableOpacity
+          style={{ justifyContent: "center" }}
+          onPress={this.search}
+        >
+          <Text
+            style={{
+              padding: 10,
+              backgroundColor: "#6699ff",
+              borderRadius: 10,
+            }}
+          >
+            Search
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -81,10 +125,9 @@ class TopBar extends Component {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    alignItems: "stretch",
     backgroundColor: "#ccccff",
     justifyContent: "space-around",
-    paddingTop: 40,
+    padding: 20,
   },
 });
 
