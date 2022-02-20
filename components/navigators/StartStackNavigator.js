@@ -11,7 +11,7 @@ const Stack = createNativeStackNavigator();
 class StartStackNavigator extends Component {
   render() {
     return (
-      <Stack.Navigator initialRouteName="Main Menu">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Main Menu" component={MainMenu} />
         <Stack.Screen name="Sign Up" component={SignUp} />
         <Stack.Screen name="Login" component={Login} />
