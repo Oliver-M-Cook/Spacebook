@@ -43,6 +43,18 @@ class Search extends Component {
     });
   }
 
+  openUserProfile = (item, index) => {
+    this.props.navigation.navigate("TempHeader", {
+      userData: item,
+      profilePicture: this.state.profilePictures[index],
+    });
+
+    // this.props.navigation.navigate("Search", {
+    //   output: this.state.output,
+    //   userIDs: userIDs,
+    // });
+  };
+
   render() {
     if (!this.state.isLoading) {
       return (
@@ -51,6 +63,7 @@ class Search extends Component {
             data={JSON.parse(this.props.route.params.output)}
             renderItem={({ item, index }) => (
               <TouchableOpacity
+                onPress={() => this.openUserProfile(item, index)}
                 style={{
                   flexDirection: "row",
                   alignItems: "center",

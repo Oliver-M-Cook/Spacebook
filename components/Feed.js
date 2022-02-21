@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import TopBar from "./TopBar";
 
 class Feed extends Component {
@@ -7,6 +7,7 @@ class Feed extends Component {
     return (
       <View style={styles.container}>
         <TopBar navigation={this.props.navigation}></TopBar>
+        <Text>Test Text</Text>
       </View>
     );
   }

@@ -1,6 +1,5 @@
 import { Component } from "react";
 import {
-  Button,
   Image,
   StyleSheet,
   Text,
@@ -27,7 +26,6 @@ class TopBar extends Component {
   };
 
   search = async () => {
-    // this.props.navigation.navigate("Search");
     let token = await AsyncStorage.getItem("@session_token");
     return fetch(
       "http://192.168.1.31:3333/api/1.0.0/search?q=".concat(
@@ -102,7 +100,6 @@ class TopBar extends Component {
           onChangeText={this.handleQuery}
           value={this.state.query}
         />
-        {/* <Button title="Search" onPress={this.search} /> */}
         <TouchableOpacity
           style={{ justifyContent: "center" }}
           onPress={this.search}

@@ -1,7 +1,6 @@
 import { Component } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "../CustomDrawerContent";
-import Feed from "../Feed";
 import AuthStackNavigator from "./AuthStackNavigator";
 
 const Drawer = createDrawerNavigator();
