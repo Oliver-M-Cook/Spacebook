@@ -20,9 +20,9 @@ class CustomDrawerContent extends Component {
     })
       .then((response) => {
         if (response.status === 200) {
-          this.props.navigation.navigate("Login");
+          this.props.navigation.navigate("Main Menu");
         } else if (response.status === 401) {
-          this.props.navigation.navigate("Login");
+          this.props.navigation.navigate("Main Menu");
         } else {
           throw "Something went wrong";
         }

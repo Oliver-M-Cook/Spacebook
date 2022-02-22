@@ -4,8 +4,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Feed from "../Feed";
 import Search from "../Search";
 import OtherUserProfile from "../OtherUserProfile";
-import FriendRequests from "../FriendRequests";
 import FriendsList from "../FriendsList";
+import FriendRequests from "../FRusingFunctional";
 
 const Stack = createNativeStackNavigator();
 

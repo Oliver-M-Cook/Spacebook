@@ -12,7 +12,11 @@ class StartStackNavigator extends Component {
   render() {
     return (
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Main Menu" component={MainMenu} />
+        <Stack.Screen
+          name="Main Menu"
+          component={MainMenu}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
         <Stack.Screen name="Sign Up" component={SignUp} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen
