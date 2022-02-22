@@ -16,8 +16,8 @@ class SignUp extends Component {
   signUp = () => {
     //Validation eventually
 
-    //Change the IP to 192.168.1.31 when at uni/find IP Address
-    return fetch("http://192.168.1.31:3333/api/1.0.0/user", {
+    //Change the IP to localhost when at uni/find IP Address
+    return fetch("http://localhost:3333/api/1.0.0/user", {
       method: "post",
       headers: {
         "Content-Type": "application/json",

@@ -21,23 +21,41 @@ class OtherUserProfile extends Component {
 
   render() {
     return (
-      <View>
-        <Image
-          source={{ uri: this.props.route.params.profilePicture }}
+      <View style={{ flex: 1, backgroundColor: "#DCD6F7" }}>
+        <View
           style={{
-            width: 150,
-            height: 150,
-            borderWidth: 2,
-            borderRadius: 75,
+            flexDirection: "row",
+            alignItems: "center",
+            padding: 10,
+            borderBottomWidth: 2,
+            borderColor: "#985F6F",
           }}
-        />
-
-        <Text>
-          {this.state.userData.user_givenname +
-            " " +
-            this.state.userData.user_familyname}
-        </Text>
-        <FriendButton></FriendButton>
+        >
+          <Image
+            source={{ uri: this.props.route.params.profilePicture }}
+            style={{
+              width: 150,
+              height: 150,
+              borderWidth: 2,
+              borderRadius: 75,
+              borderColor: "#985F6F",
+            }}
+          />
+          <View
+            style={{
+              flexDirection: "column",
+              alignItems: "center",
+              flex: 1,
+            }}
+          >
+            <Text>
+              {this.state.userData.user_givenname +
+                " " +
+                this.state.userData.user_familyname}
+            </Text>
+            <FriendButton userID={this.state.userData.user_id}></FriendButton>
+          </View>
+        </View>
       </View>
     );
   }

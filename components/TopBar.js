@@ -28,7 +28,7 @@ class TopBar extends Component {
   search = async () => {
     let token = await AsyncStorage.getItem("@session_token");
     return fetch(
-      "http://192.168.1.31:3333/api/1.0.0/search?q=".concat(
+      "http://localhost:3333/api/1.0.0/search?q=".concat(
         this.state.query,
         "&search_in=all"
       ),
@@ -90,7 +90,7 @@ class TopBar extends Component {
               height: 50,
               borderWidth: 2,
               borderRadius: 25,
-              borderColor: "#6699ff",
+              borderColor: "#B4869F",
             }}
           />
         </TouchableOpacity>
@@ -107,7 +107,7 @@ class TopBar extends Component {
           <Text
             style={{
               padding: 10,
-              backgroundColor: "#6699ff",
+              backgroundColor: "#B4869F",
               borderRadius: 10,
             }}
           >
@@ -122,9 +122,11 @@ class TopBar extends Component {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: "#ccccff",
+    backgroundColor: "#A6B1E1",
     justifyContent: "space-around",
     padding: 20,
+    borderBottomWidth: 2,
+    borderColor: "#985F6F",
   },
 });
 

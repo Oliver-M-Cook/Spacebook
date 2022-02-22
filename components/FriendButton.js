@@ -1,5 +1,6 @@
 import { Component } from "react";
-import { Text, View } from "react-native";
+import { Button, Text, TouchableOpacity, View } from "react-native";
+import { addFriend } from "./Functions/FunctionStorage";
 
 class FriendButton extends Component {
   constructor(props) {
@@ -19,9 +20,21 @@ class FriendButton extends Component {
   render() {
     if (!this.state.isLoading) {
       return (
-        <View>
-          <Text>Text Text</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => addFriend(this.props.userID)}
+          style={{ marginTop: 5 }}
+        >
+          <Text
+            style={{
+              backgroundColor: "#B4869F",
+              padding: 10,
+              textAlign: "center",
+              borderRadius: 10,
+            }}
+          >
+            Add
+          </Text>
+        </TouchableOpacity>
       );
     } else {
       return (

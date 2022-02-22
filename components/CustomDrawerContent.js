@@ -12,7 +12,7 @@ class CustomDrawerContent extends Component {
     console.log(token);
     await AsyncStorage.removeItem("@session_token");
     await AsyncStorage.removeItem("@user_id");
-    return fetch("http://192.168.1.31:3333/api/1.0.0/logout", {
+    return fetch("http://localhost:3333/api/1.0.0/logout", {
       method: "post",
       headers: {
         "X-Authorization": token,
