@@ -1,29 +1,26 @@
 import * as React from 'react'
 import { Component } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Feed from '../Feed'
-import Search from '../Search'
-import OtherUserProfile from '../OtherUserProfile'
 import FriendsList from '../FriendsList'
 import FriendRequests from '../FRusingFunctional'
 
 const Stack = createNativeStackNavigator()
 
 class FriendStackNavigator extends Component {
-	render() {
-		return (
-			<Stack.Navigator>
-				<Stack.Screen
-					name='Friend Requests'
-					component={FriendRequests}
-					options={{ headerShown: false, gestureEnabled: false }}
-				/>
-				<Stack.Screen
-					name='Friends List'
-					component={FriendsList}
-					options={{ headerShown: false, gestureEnabled: false }}
-				/>
-				{/* <Stack.Screen
+  render () {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name='Friend Requests'
+          component={FriendRequests}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name='Friends List'
+          component={FriendsList}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        {/* <Stack.Screen
           name="Feed"
           component={Feed}
           options={{ headerShown: false }}
@@ -38,9 +35,9 @@ class FriendStackNavigator extends Component {
           component={OtherUserProfile}
           options={{ gestureEnabled: false }}
         /> */}
-			</Stack.Navigator>
-		)
-	}
+      </Stack.Navigator>
+    )
+  }
 }
 
 export default FriendStackNavigator
