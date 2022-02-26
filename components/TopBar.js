@@ -27,6 +27,7 @@ class TopBar extends Component {
 
   search = async () => {
     let token = await AsyncStorage.getItem("@session_token");
+    let userID = await AsyncStorage.getItem("@user_id");
     return fetch(
       "http://localhost:3333/api/1.0.0/search?q=".concat(
         this.state.query,
@@ -51,6 +52,17 @@ class TopBar extends Component {
         }
       })
       .then((responseJson) => {
+        let found = false;
+        let foundIndex = -1;
+        responseJson.forEach((user, index) => {
+          if (user.user_id == userID) {
+            foundIndex = index;
+            found = true;
+          }
+        });
+        if (found) {
+          responseJson.splice(foundIndex, 1);
+        }
         this.setState({ output: JSON.stringify(responseJson) });
         let userIDs = [];
         responseJson.forEach((user) => {

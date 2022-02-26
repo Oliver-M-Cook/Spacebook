@@ -1,48 +1,125 @@
-import { Component } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { getFriends, getProfilePicture } from "./Functions/FunctionStorage";
 import TopBar from "./TopBar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-class FriendsList extends Component {
-  constructor(props) {
-    super(props);
+const RenderFlatListHeader = () => {
+  return <Text style={{ fontSize: 25, fontWeight: "bold" }}>Friends List</Text>;
+};
 
-    this.state = {
-      isLoading: true,
-    };
-  }
+const RenderFlatList = (props) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [friendListArray, setArray] = useState([]);
+  const [profilePictureArray, setPictureArray] = useState([]);
 
-  render() {
+  useFocusEffect(
+    React.useCallback(() => {
+      AsyncStorage.getItem("@user_id").then((userID) => {
+        getFriends(userID).then((responseJson) => {
+          responseJson.forEach((user) => {
+            friendListArray.push(user);
+            getProfilePicture(user.user_id).then((imageURI) => {
+              profilePictureArray.push(imageURI);
+              if (friendListArray.length == profilePictureArray.length) {
+                setIsLoading(false);
+              }
+            });
+          });
+        });
+      });
+    }, [])
+  );
+
+  const navigation = useNavigation();
+
+  const openUserProfile = (item, index) => {
+    navigation.navigate("TempHeader", {
+      userData: item,
+      profilePicture: profilePictureArray[index],
+    });
+  };
+
+  if (!isLoading) {
     return (
-      <View style={styles.container}>
-        <TopBar navigation={this.props.navigation}></TopBar>
-        <View
-          style={{
-            borderBottomWidth: 2,
-            borderColor: "#985F6F",
-          }}
-        >
+      <FlatList
+        data={friendListArray}
+        renderItem={({ item, index }) => (
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate("Friend Requests")}
+            onPress={() => {
+              openUserProfile(item, index);
+            }}
             style={{
+              flexDirection: "row",
+              alignItems: "center",
+              flex: 1,
               margin: 5,
-              alignSelf: "flex-start",
             }}
           >
-            <Text
+            <Image
+              source={{ uri: profilePictureArray[index] }}
               style={{
-                padding: 5,
-                backgroundColor: "#B4869F",
-                borderRadius: 10,
+                width: 50,
+                height: 50,
+                borderWidth: 2,
+                borderRadius: 25,
               }}
-            >
-              Friend Requests
+            />
+            <Text style={{ paddingLeft: 10 }}>
+              {item.user_givenname + " " + item.user_familyname}
             </Text>
           </TouchableOpacity>
-        </View>
-      </View>
+        )}
+        ListHeaderComponent={RenderFlatListHeader}
+        StickyHeaderComponent={[0]}
+        keyExtractor={(item) => item.user_id}
+      />
     );
+  } else {
+    return <Text>Loading...</Text>;
   }
-}
+};
+
+const FriendsList = (props) => {
+  return (
+    <View style={styles.container}>
+      <TopBar navigation={props.navigation}></TopBar>
+      <View
+        style={{
+          borderBottomWidth: 2,
+          borderColor: "#985F6F",
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate("Friend Requests")}
+          style={{
+            margin: 5,
+            alignSelf: "flex-start",
+          }}
+        >
+          <Text
+            style={{
+              padding: 5,
+              backgroundColor: "#B4869F",
+              borderRadius: 10,
+            }}
+          >
+            Friend Requests
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <RenderFlatList />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

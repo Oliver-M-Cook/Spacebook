@@ -48,11 +48,6 @@ class Search extends Component {
       userData: item,
       profilePicture: this.state.profilePictures[index],
     });
-
-    // this.props.navigation.navigate("Search", {
-    //   output: this.state.output,
-    //   userIDs: userIDs,
-    // });
   };
 
   render() {

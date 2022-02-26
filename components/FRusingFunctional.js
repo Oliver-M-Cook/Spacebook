@@ -10,6 +10,7 @@ import {
 import {
   acceptFriendRequest,
   getFriendRequests,
+  rejectFriendRequest,
 } from "./Functions/FunctionStorage";
 import TopBar from "./TopBar";
 
@@ -25,18 +26,25 @@ const RenderFlatList = (props) => {
   const [refresh, setRefresh] = useState(true);
 
   const handleAccept = (userID, index) => {
-    let newList = friendRequestArray;
-    newList.splice(index, 1);
-    console.log(newList);
-    setArray(newList);
-    setRefresh(!refresh);
+    removeElement(index);
     acceptFriendRequest(userID);
+  };
+
+  const handleReject = (userID, index) => {
+    removeElement(index);
+    rejectFriendRequest(userID);
+  };
+
+  const removeElement = (index) => {
+    let tempArray = friendRequestArray;
+    tempArray.splice(index, 1);
+    setArray(tempArray);
+    setRefresh(!refresh);
   };
 
   useFocusEffect(
     React.useCallback(() => {
       getFriendRequests().then((responseJson) => {
-        console.log(responseJson);
         setArray(responseJson);
         setIsLoading(false);
       });
@@ -78,7 +86,9 @@ const RenderFlatList = (props) => {
                   Accept
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleReject(item.user_id, index)}
+              >
                 <Text
                   style={{
                     backgroundColor: "#ff6666",
