@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import { Image, Text, View } from 'react-native'
 import FriendButton from './FriendButton'
+import PostComponent from './PostComponent'
 
 class OtherUserProfile extends Component {
   constructor (props) {
@@ -12,8 +13,6 @@ class OtherUserProfile extends Component {
   }
 
   componentDidMount () {
-    console.log(this.props.route.params.userData)
-    console.log(this.props.route.params.profilePicture)
     this.setState({
       userData: this.props.route.params.userData
     })
@@ -56,6 +55,7 @@ class OtherUserProfile extends Component {
             <FriendButton userID={this.state.userData.user_id} />
           </View>
         </View>
+        <PostComponent />
       </View>
     )
   }

@@ -44,7 +44,6 @@ const RenderFlatList = (props) => {
     React.useCallback(() => {
       const fetchFriends = async () => {
         const loggedUserID = await AsyncStorage.getItem('@user_id')
-        console.log(loggedUserID)
         const friends = await getFriends(loggedUserID)
         setFriends(friends)
       }

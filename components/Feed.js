@@ -1,13 +1,14 @@
 import { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import PostComponent from './PostComponent'
 import TopBar from './TopBar'
 
 class Feed extends Component {
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         <TopBar navigation={this.props.navigation} />
-        <Text>Test Text</Text>
+        <PostComponent />
       </View>
     )
   }

@@ -9,7 +9,7 @@ import OtherUserProfile from '../OtherUserProfile'
 const Stack = createNativeStackNavigator()
 
 class FriendStackNavigator extends Component {
-  render() {
+  render () {
     return (
       <Stack.Navigator>
         <Stack.Screen
