@@ -1,5 +1,5 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   FlatList,
   Image,
@@ -19,44 +19,48 @@ const RenderFlatListHeader = () => {
 const RenderFlatList = (props) => {
   const [isLoading, setIsLoading] = useState(true)
   const [friendListArray, setFriends] = useState([])
-  const [profilePictureArray] = useState([])
+  const [profilePictureArray, setPictures] = useState([])
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     AsyncStorage.getItem('@user_id').then((userID) => {
-  //       getFriends(userID).then((responseJson) => {
-  //         responseJson.forEach((user) => {
-  //           friendListArray.push(user)
+  const isInitialMount = useRef(true)
+  const isInitialMount2 = useRef(true)
 
-  //           getProfilePicture(user.user_id).then((imageURI) => {
-  //             profilePictureArray.push(imageURI)
-  //             if (friendListArray.length === profilePictureArray.length) {
-  //               setIsLoading(false)
-  //             }
-  //           })
-  //         })
-  //         if (responseJson.length === 0) {
-  //           setIsLoading(false)
-  //         }
-  //       })
-  //     })
-  //   }, [])
-  // )
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+    } else {
+      fetchPictures()
+    }
+  }, [friendListArray])
+
+  useEffect(() => {
+    if (isInitialMount2.current) {
+      isInitialMount2.current = false
+    } else {
+      setIsLoading(false)
+    }
+  }, [profilePictureArray])
 
   useFocusEffect(
     React.useCallback(() => {
-      const fetchData = async () => {
+      const fetchFriends = async () => {
         const loggedUserID = await AsyncStorage.getItem('@user_id')
         console.log(loggedUserID)
         const friends = await getFriends(loggedUserID)
-        console.log(friends)
-        await setFriends(friends)
-        setIsLoading(false)
+        setFriends(friends)
       }
 
-      fetchData()
+      fetchFriends()
     }, [])
   )
+
+  const fetchPictures = async () => {
+    const pictures = await Promise.all(
+      friendListArray.map(async (user) => {
+        return getProfilePicture(user.user_id)
+      })
+    )
+    setPictures(pictures)
+  }
 
   const navigation = useNavigation()
 
