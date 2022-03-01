@@ -3,7 +3,7 @@ import ErrorMessage from '../ErrorMessage'
 
 /* global fetch */
 
-export async function getProfilePicture(userID) {
+export async function getProfilePicture (userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/photo'),
@@ -34,7 +34,7 @@ export async function getProfilePicture(userID) {
     })
 }
 
-export async function addFriend(userID) {
+export async function addFriend (userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/friends'),
@@ -63,7 +63,7 @@ export async function addFriend(userID) {
     })
 }
 
-export async function getFriendRequests() {
+export async function getFriendRequests () {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch('http://localhost:3333/api/1.0.0/friendrequests', {
     method: 'GET',
@@ -85,7 +85,7 @@ export async function getFriendRequests() {
     })
 }
 
-export async function acceptFriendRequest(userID) {
+export async function acceptFriendRequest (userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/friendrequests/'.concat(userID),
@@ -112,7 +112,7 @@ export async function acceptFriendRequest(userID) {
     })
 }
 
-export async function rejectFriendRequest(userID) {
+export async function rejectFriendRequest (userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/friendrequests/'.concat(userID),
@@ -139,7 +139,7 @@ export async function rejectFriendRequest(userID) {
     })
 }
 
-export async function getFriends(userID) {
+export async function getFriends (userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/friends'),
@@ -171,7 +171,7 @@ export async function getFriends(userID) {
     })
 }
 
-export async function logout() {
+export async function logout () {
   const token = await AsyncStorage.getItem('@session_token')
   await AsyncStorage.removeItem('@session_token')
   await AsyncStorage.removeItem('@user_id')
@@ -195,7 +195,7 @@ export async function logout() {
     })
 }
 
-export async function login() {
+export async function login () {
   return fetch('http://localhost:3333/api/1.0.0/login', {
     method: 'post',
     headers: {
@@ -213,7 +213,6 @@ export async function login() {
       }
     })
     .then(async (responseJson) => {
-      console.log(responseJson)
       await AsyncStorage.setItem('@session_token', responseJson.token)
       await AsyncStorage.setItem('@user_id', responseJson.id.toString())
       this.props.navigation.navigate('Feed')
@@ -223,7 +222,7 @@ export async function login() {
     })
 }
 
-export async function search() {
+export async function search () {
   const token = await AsyncStorage.getItem('@session_token')
   const userID = await AsyncStorage.getItem('@user_id')
   return fetch(
@@ -276,7 +275,7 @@ export async function search() {
     })
 }
 
-export async function signUp() {
+export async function signUp () {
   return fetch('http://localhost:3333/api/1.0.0/user', {
     method: 'post',
     headers: {

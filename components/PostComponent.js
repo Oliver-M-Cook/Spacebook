@@ -12,6 +12,18 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const PostComponent = (props) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchFriends = () => {
+        if (props.userID !== undefined) {
+          console.log(props.userID)
+        }
+      }
+
+      fetchFriends()
+    }, [props.userID])
+  )
+
   return (
     <View
       style={{
@@ -31,7 +43,7 @@ const PostComponent = (props) => {
           <Text>Post</Text>
         </TouchableOpacity>
       </View>
-      <Text>Posts will show here</Text>
+      <Text>Posts will be here</Text>
     </View>
   )
 }

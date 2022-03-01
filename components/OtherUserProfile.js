@@ -55,7 +55,7 @@ class OtherUserProfile extends Component {
             <FriendButton userID={this.state.userData.user_id} />
           </View>
         </View>
-        <PostComponent />
+        <PostComponent userID={this.state.userData.user_id} loggedIn={false} />
       </View>
     )
   }

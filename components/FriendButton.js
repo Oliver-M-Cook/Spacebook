@@ -4,7 +4,7 @@ import { addFriend, getFriends } from './Functions/FunctionStorage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 class FriendButton extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -13,7 +13,7 @@ class FriendButton extends Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const fetchData = async () => {
       const loggedUserID = await AsyncStorage.getItem('@user_id')
       const friends = await getFriends(loggedUserID)
@@ -30,7 +30,7 @@ class FriendButton extends Component {
     fetchData()
   }
 
-  render () {
+  render() {
     if (!this.state.isLoading) {
       if (this.state.isFriends) {
         return (
