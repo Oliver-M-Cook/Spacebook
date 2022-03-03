@@ -3,18 +3,21 @@ import {
   DrawerItem,
   DrawerItemList
 } from '@react-navigation/drawer'
-import { Component } from 'react'
-import { logout } from './Functions/FunctionStorage'
+import React from 'react'
+import { logout } from './Functions/UserManagement'
 
-class CustomDrawerContent extends Component {
-  render () {
-    return (
-      <DrawerContentScrollView {...this.props}>
-        <DrawerItemList {...this.props} />
-        <DrawerItem label='Logout' onPress={logout.bind(this)} />
-      </DrawerContentScrollView>
-    )
+const CustomDrawerContent = (props) => {
+  const handleLogout = async () => {
+    await logout()
+    props.navigation.navigate('Main Menu')
   }
+
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem label='Logout' onPress={handleLogout} />
+    </DrawerContentScrollView>
+  )
 }
 
 export default CustomDrawerContent

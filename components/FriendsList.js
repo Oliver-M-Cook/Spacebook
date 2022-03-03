@@ -8,9 +8,10 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import { getFriends, getProfilePicture } from './Functions/FunctionStorage'
+import { getFriends } from './Functions/FunctionStorage'
 import TopBar from './TopBar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getProfilePicture } from './Functions/UserManagement'
 
 const RenderFlatListHeader = () => {
   return <Text style={{ fontSize: 25, fontWeight: 'bold' }}>Friends List</Text>

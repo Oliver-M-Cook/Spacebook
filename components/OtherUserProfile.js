@@ -4,7 +4,7 @@ import FriendButton from './FriendButton'
 import PostComponent from './PostComponent'
 
 class OtherUserProfile extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -12,13 +12,13 @@ class OtherUserProfile extends Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setState({
       userData: this.props.route.params.userData
     })
   }
 
-  render () {
+  render() {
     return (
       <View style={{ flex: 1, backgroundColor: '#DCD6F7' }}>
         <View
@@ -55,7 +55,7 @@ class OtherUserProfile extends Component {
             <FriendButton userID={this.state.userData.user_id} />
           </View>
         </View>
-        <PostComponent userID={this.state.userData.user_id} loggedIn={false} />
+        <PostComponent userID={this.state.userData.user_id} />
       </View>
     )
   }

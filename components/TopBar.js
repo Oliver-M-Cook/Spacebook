@@ -1,4 +1,5 @@
-import { Component } from 'react'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Image,
   StyleSheet,
@@ -8,43 +9,68 @@ import {
   View
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { getProfilePicture, search } from './Functions/FunctionStorage'
+import { getProfilePicture } from './Functions/UserManagement'
+import { search } from './Functions/FunctionStorage'
 
-class TopBar extends Component {
-  constructor (props) {
-    super(props)
+const TopBar = (props) => {
+  const [query, setQuery] = useState('')
+  const [userProfilePicture, setPicture] = useState('')
+  const [isLoading, setLoading] = useState(true)
 
-    this.state = {
-      query: '',
-      output: '',
-      userIDs: [],
-      userProfilePicture: ''
+  const navigation = useNavigation()
+  const isInitialMount = useRef(true)
+
+  const handleSideNav = () => {
+    navigation.openDrawer()
+  }
+
+  const handleQuery = (text) => {
+    setQuery(text)
+  }
+
+  const handleSearch = async () => {
+    const response = await search(query)
+    if (response.code === 401) {
+      navigation.navigate('Main Menu')
+    } else {
+      navigation.navigate('Search', {
+        output: response.users,
+        userIDs: response.userIDs
+      })
     }
   }
 
-  handleSideNav = () => {
-    this.props.navigation.openDrawer()
-  }
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+    } else {
+      setLoading(false)
+    }
+  }, [userProfilePicture])
 
-  handleQuery = (query) => {
-    this.setState({ query: query })
-  }
+  useFocusEffect(
+    React.useCallback(() => {
+      const setup = async () => {
+        const userID = await AsyncStorage.getItem('@user_id')
+        const profilePicture = await getProfilePicture(userID)
 
-  async componentDidMount () {
-    const userID = await AsyncStorage.getItem('@user_id')
-    getProfilePicture(userID).then((imageURI) => {
-      this.setState({
-        userProfilePicture: imageURI
-      })
-    })
-  }
+        if (profilePicture.code === 401) {
+          navigation.navigate('Main Menu')
+        } else {
+          setPicture(profilePicture)
+        }
+      }
 
-  render () {
+      setup()
+    }, [])
+  )
+
+  if (!isLoading) {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={this.handleSideNav}>
+        <TouchableOpacity onPress={handleSideNav}>
           <Image
-            source={{ uri: this.state.userProfilePicture }}
+            source={{ uri: userProfilePicture }}
             style={{
               width: 50,
               height: 50,
@@ -57,12 +83,12 @@ class TopBar extends Component {
         <TextInput
           placeholder='Search...'
           style={{ width: 150 }}
-          onChangeText={this.handleQuery}
-          value={this.state.query}
+          onChangeText={handleQuery}
+          value={query}
         />
         <TouchableOpacity
           style={{ justifyContent: 'center' }}
-          onPress={search.bind(this)}
+          onPress={handleSearch}
         >
           <Text
             style={{
@@ -74,6 +100,12 @@ class TopBar extends Component {
             Search
           </Text>
         </TouchableOpacity>
+      </View>
+    )
+  } else {
+    return (
+      <View>
+        <Text>Loading...</Text>
       </View>
     )
   }

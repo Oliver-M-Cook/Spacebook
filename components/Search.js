@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import { getProfilePicture } from './Functions/FunctionStorage'
+import { getProfilePicture } from './Functions/UserManagement'
 
 class Search extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -20,7 +20,7 @@ class Search extends Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const userIDs = this.props.route.params.userIDs
     userIDs.forEach((userID) => {
       getProfilePicture(userID).then((imageURI) => {
@@ -48,7 +48,7 @@ class Search extends Component {
     })
   }
 
-  render () {
+  render() {
     if (!this.state.isLoading) {
       return (
         <SafeAreaView>
