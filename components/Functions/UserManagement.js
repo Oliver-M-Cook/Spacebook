@@ -84,3 +84,29 @@ export async function login() {
       return error
     })
 }
+
+export async function uploadPicture(data) {
+  const userID = await AsyncStorage.getItem('@user_id')
+  const token = await AsyncStorage.getItem('@session_token')
+
+  const res = await fetch(data.base64)
+  const blob = await res.blob()
+
+  return fetch(
+    'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/photo'),
+    {
+      method: 'post',
+      headers: {
+        'Content-Type': 'image/png',
+        'X-Authorization': token
+      },
+      body: blob
+    }
+  )
+    .then((response) => {
+      console.log('Picture Added', response)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}

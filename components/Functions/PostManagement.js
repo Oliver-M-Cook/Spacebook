@@ -3,7 +3,7 @@ import ErrorMessage from '../ErrorMessage'
 
 /* global fetch */
 
-export async function getPosts (userID) {
+export async function getPosts(userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/post'),
@@ -35,7 +35,7 @@ export async function getPosts (userID) {
     })
 }
 
-export async function sendPost (postBody, userID) {
+export async function sendPost(postBody, userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/post'),
@@ -50,7 +50,7 @@ export async function sendPost (postBody, userID) {
   )
     .then((response) => {
       if (response.status === 201) {
-        console.log('Posted')
+        return { code: 201 }
       } else if (response.status === 401) {
         throw new ErrorMessage('Unauthorized', 401)
       } else if (response.status === 404) {
@@ -64,7 +64,7 @@ export async function sendPost (postBody, userID) {
     })
 }
 
-export async function getPost (userID, postID) {
+export async function getPost(userID, postID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/post/', postID),
@@ -96,7 +96,7 @@ export async function getPost (userID, postID) {
     })
 }
 
-export async function deletePost (userID, postID) {
+export async function deletePost(userID, postID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/post/', postID),
@@ -125,7 +125,7 @@ export async function deletePost (userID, postID) {
     })
 }
 
-export async function updatePost (userID, postID, postBody) {
+export async function updatePost(userID, postID, postBody) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/post/', postID),
@@ -158,7 +158,7 @@ export async function updatePost (userID, postID, postBody) {
     })
 }
 
-export async function likePost (userID, postID) {
+export async function likePost(userID, postID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(
@@ -176,7 +176,7 @@ export async function likePost (userID, postID) {
   )
     .then((response) => {
       if (response.status === 200) {
-        console.log('Liked')
+        return { code: 200 }
       } else if (response.status === 401) {
         throw new ErrorMessage('Unauthorized', 401)
       } else if (response.status === 403) {
@@ -192,7 +192,7 @@ export async function likePost (userID, postID) {
     })
 }
 
-export async function unlikePost (userID, postID) {
+export async function unlikePost(userID, postID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(
@@ -210,7 +210,7 @@ export async function unlikePost (userID, postID) {
   )
     .then((response) => {
       if (response.status === 200) {
-        console.log('Unliked')
+        return { code: 200 }
       } else if (response.status === 401) {
         throw new ErrorMessage('Unauthorized', 401)
       } else if (response.status === 403) {

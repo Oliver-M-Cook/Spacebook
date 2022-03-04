@@ -10,7 +10,7 @@ import {
 import { getProfilePicture } from './Functions/UserManagement'
 
 class Search extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -20,25 +20,25 @@ class Search extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     const userIDs = this.props.route.params.userIDs
-    userIDs.forEach((userID) => {
-      getProfilePicture(userID).then((imageURI) => {
-        const tempArray = this.state.profilePictures
-        let counter = this.state.loadingCounter
-        counter += 1
-        tempArray.push(imageURI)
-        this.setState({
-          profilePictures: tempArray,
-          loadingCounter: counter
+    const data = this.props.route.params.output
+
+    const setup = async () => {
+      const profilePictures = await Promise.all(
+        userIDs.map(async (userID) => {
+          console.log(userID)
+          return getProfilePicture(userID)
         })
-        if (counter === userIDs.length) {
-          this.setState({
-            isLoading: false
-          })
-        }
+      )
+
+      this.setState({
+        profilePictures: profilePictures,
+        isLoading: false
       })
-    })
+    }
+
+    setup()
   }
 
   openUserProfile = (item, index) => {
@@ -48,7 +48,7 @@ class Search extends Component {
     })
   }
 
-  render() {
+  render () {
     if (!this.state.isLoading) {
       return (
         <SafeAreaView>

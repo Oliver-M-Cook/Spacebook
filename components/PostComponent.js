@@ -10,7 +10,12 @@ import {
   View
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { getPosts, sendPost } from './Functions/PostManagement'
+import {
+  getPosts,
+  likePost,
+  sendPost,
+  unlikePost
+} from './Functions/PostManagement'
 
 const RenderFlatListHeader = () => {
   return <Text style={{ fontSize: 25, fontWeight: 'bold' }}>Posts</Text>
@@ -22,7 +27,7 @@ const PostComponent = (props) => {
   const [postText, setPostText] = useState('')
   const [posts, setPosts] = useState([])
   const [refresh, setRefresh] = useState(true)
-  const [user, setUser] = useState()
+  const [userState, setUser] = useState()
 
   const isInitialMount = useRef(true)
 
@@ -34,7 +39,7 @@ const PostComponent = (props) => {
     } else {
       fetchPosts()
     }
-  }, [user])
+  }, [userState])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -50,6 +55,8 @@ const PostComponent = (props) => {
       }
 
       setup()
+
+      return () => setUser()
     }, [props.userID])
   )
 
@@ -72,12 +79,23 @@ const PostComponent = (props) => {
     setPostText(text)
   }
 
-  const sendPostText = () => {
-    const response = sendPost({ text: postText }, props.userID)
+  const sendPostText = async () => {
+    const response = await sendPost({ text: postText }, props.userID)
     if (response.code === 401) {
       navigation.navigate('Main Menu')
     } else {
       setPostText('')
+      fetchPosts()
+    }
+  }
+
+  const handleLike = async (userID, postID) => {
+    const response = await likePost(userID, postID)
+
+    if (response.code === 403 || response.code === 500) {
+      await unlikePost(userID, postID)
+      fetchPosts()
+    } else {
       fetchPosts()
     }
   }
@@ -111,13 +129,15 @@ const PostComponent = (props) => {
           <FlatList
             data={posts}
             renderItem={({ item, index }) => (
-              <View>
+              <View style={{ marginBottom: 10 }}>
                 <Text>
                   Posted By:{' '}
                   {item.author.first_name + ' ' + item.author.last_name}
                 </Text>
                 <Text>{item.text}</Text>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleLike(props.userID, item.post_id)}
+                >
                   <Text>Like/Unlike</Text>
                 </TouchableOpacity>
                 <Text>Number of Likes: {item.numLikes}</Text>
