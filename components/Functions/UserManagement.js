@@ -3,7 +3,7 @@ import ErrorMessage from '../ErrorMessage'
 
 /* global fetch */
 
-export async function getProfilePicture(userID) {
+export async function getProfilePicture (userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/photo'),
@@ -34,7 +34,7 @@ export async function getProfilePicture(userID) {
     })
 }
 
-export async function logout() {
+export async function logout () {
   const token = await AsyncStorage.getItem('@session_token')
   await AsyncStorage.removeItem('@session_token')
   await AsyncStorage.removeItem('@user_id')
@@ -58,7 +58,7 @@ export async function logout() {
     })
 }
 
-export async function login() {
+export async function login () {
   return fetch('http://localhost:3333/api/1.0.0/login', {
     method: 'post',
     headers: {
@@ -85,7 +85,7 @@ export async function login() {
     })
 }
 
-export async function uploadPicture(data) {
+export async function uploadPicture (data) {
   const userID = await AsyncStorage.getItem('@user_id')
   const token = await AsyncStorage.getItem('@session_token')
 
@@ -108,5 +108,61 @@ export async function uploadPicture(data) {
     })
     .catch((error) => {
       console.log(error)
+    })
+}
+
+export async function getUser (userID) {
+  const token = await AsyncStorage.getItem('@session_token')
+
+  return fetch('http://localhost:3333/api/1.0.0/user/'.concat(userID), {
+    method: 'get',
+    headers: {
+      'X-Authorization': token
+    }
+  })
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json()
+      } else if (response.status === 401) {
+        throw new ErrorMessage('Unauthorised', 401)
+      } else if (response.status === 404) {
+        throw new ErrorMessage('Not Found', 404)
+      } else {
+        throw new ErrorMessage('Something went wrong', 500)
+      }
+    })
+    .catch((error) => {
+      return error
+    })
+}
+
+export async function updateUser (userID, data) {
+  const token = await AsyncStorage.getItem('@session_token')
+
+  return fetch('http://localhost:3333/api/1.0.0/user/'.concat(userID), {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Authorization': token
+    },
+    body: JSON.stringify(data)
+  })
+    .then((response) => {
+      if (response.status === 200) {
+        return { code: 200 }
+      } else if (response.status === 400) {
+        throw new ErrorMessage('Bad Request', 400)
+      } else if (response.status === 401) {
+        throw new ErrorMessage('Unauthorised', 401)
+      } else if (response.status === 403) {
+        throw new ErrorMessage('Forbidden', 403)
+      } else if (response.status === 404) {
+        throw new ErrorMessage('Not Found', 404)
+      } else {
+        throw new ErrorMessage('Something went wrong', 500)
+      }
+    })
+    .catch((error) => {
+      return error
     })
 }

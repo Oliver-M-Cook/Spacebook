@@ -10,7 +10,7 @@ import {
 import { getProfilePicture } from './Functions/UserManagement'
 
 class Search extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -20,9 +20,8 @@ class Search extends Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const userIDs = this.props.route.params.userIDs
-    const data = this.props.route.params.output
 
     const setup = async () => {
       const profilePictures = await Promise.all(
@@ -48,7 +47,7 @@ class Search extends Component {
     })
   }
 
-  render () {
+  render() {
     if (!this.state.isLoading) {
       return (
         <SafeAreaView>

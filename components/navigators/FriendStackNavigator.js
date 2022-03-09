@@ -5,6 +5,7 @@ import FriendsList from '../FriendsList'
 import FriendRequests from '../FRusingFunctional'
 import Search from '../Search'
 import OtherUserProfile from '../OtherUserProfile'
+import SinglePost from '../SinglePost'
 
 const Stack = createNativeStackNavigator()
 
@@ -30,6 +31,11 @@ class FriendStackNavigator extends Component {
         <Stack.Screen
           name='TempHeader'
           component={OtherUserProfile}
+          options={{ gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name='Single Post'
+          component={SinglePost}
           options={{ gestureEnabled: false }}
         />
       </Stack.Navigator>

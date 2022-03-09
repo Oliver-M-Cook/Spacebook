@@ -3,21 +3,29 @@ import { Camera } from 'expo-camera'
 import { useEffect, useState } from 'react/cjs/react.development'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { uploadPicture } from './Functions/UserManagement'
+import { set } from 'react-native-reanimated'
+import { useFocusEffect } from '@react-navigation/native'
 
 const CameraScreen = (props) => {
   const [hasPermission, setHasPermission] = useState(null)
   const [type, setType] = useState(Camera.Constants.Type.back)
+  const [cameraOn, setCameraOn] = useState(false)
 
   const cameraRef = useRef(null)
 
-  useEffect(() => {
-    async function getPermission() {
-      const { status } = await Camera.requestCameraPermissionsAsync()
-      setHasPermission(status === 'granted')
-    }
+  useFocusEffect(
+    React.useCallback(() => {
+      const setup = async () => {
+        const { status } = await Camera.getCameraPermissionsAsync()
+        setHasPermission(status === 'granted')
+        setCameraOn(true)
+      }
 
-    getPermission()
-  }, [])
+      setup()
+
+      return setCameraOn(false)
+    }, [])
+  )
 
   const takePicture = async () => {
     if (cameraRef) {
@@ -31,20 +39,24 @@ const CameraScreen = (props) => {
   }
 
   if (hasPermission) {
-    return (
-      <View style={styles.container}>
-        <Camera style={styles.camera} type={type} ref={cameraRef}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => takePicture()}
-            >
-              <Text style={styles.text}>Take Photo</Text>
-            </TouchableOpacity>
-          </View>
-        </Camera>
-      </View>
-    )
+    if (cameraOn) {
+      return (
+        <View style={styles.container}>
+          <Camera style={styles.camera} type={type} ref={cameraRef}>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => takePicture()}
+              >
+                <Text style={styles.text}>Take Photo</Text>
+              </TouchableOpacity>
+            </View>
+          </Camera>
+        </View>
+      )
+    } else {
+      return null
+    }
   } else {
     return <Text>No access to camera</Text>
   }

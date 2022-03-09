@@ -28,6 +28,7 @@ const PostComponent = (props) => {
   const [posts, setPosts] = useState([])
   const [refresh, setRefresh] = useState(true)
   const [userState, setUser] = useState()
+  const [timer, setTimer] = useState('')
 
   const isInitialMount = useRef(true)
 
@@ -108,7 +109,8 @@ const PostComponent = (props) => {
             margin: 10,
             backgroundColor: 'yellow',
             borderWidth: 2,
-            borderColor: '#985F6F'
+            borderColor: '#985F6F',
+            flex: 1
           }}
         >
           <View style={{ padding: 10, borderBottomWidth: 2 }}>
@@ -134,7 +136,16 @@ const PostComponent = (props) => {
                   Posted By:{' '}
                   {item.author.first_name + ' ' + item.author.last_name}
                 </Text>
-                <Text>{item.text}</Text>
+                <TouchableOpacity
+                  style={{ marginBottom: 5 }}
+                  onPress={() =>
+                    navigation.navigate('Single Post', {
+                      postID: item.post_id,
+                      userID: userState
+                    })}
+                >
+                  <Text>{item.text}</Text>
+                </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => handleLike(props.userID, item.post_id)}
                 >

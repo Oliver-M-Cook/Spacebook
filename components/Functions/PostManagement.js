@@ -3,12 +3,12 @@ import ErrorMessage from '../ErrorMessage'
 
 /* global fetch */
 
-export async function getPosts(userID) {
+export async function getPosts (userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/post'),
     {
-      method: 'get',
+      method: 'GET',
       headers: {
         'X-Authorization': token
       }
@@ -35,12 +35,13 @@ export async function getPosts(userID) {
     })
 }
 
-export async function sendPost(postBody, userID) {
+export async function sendPost (postBody, userID) {
   const token = await AsyncStorage.getItem('@session_token')
+
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/post'),
     {
-      method: 'post',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Authorization': token
@@ -64,12 +65,12 @@ export async function sendPost(postBody, userID) {
     })
 }
 
-export async function getPost(userID, postID) {
+export async function getPost (userID, postID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/post/', postID),
     {
-      method: 'get',
+      method: 'GET',
       headers: {
         'X-Authorization': token
       }
@@ -96,12 +97,12 @@ export async function getPost(userID, postID) {
     })
 }
 
-export async function deletePost(userID, postID) {
+export async function deletePost (userID, postID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/post/', postID),
     {
-      method: 'delete',
+      method: 'DELETE',
       headers: {
         'X-Authorization': token
       }
@@ -109,7 +110,7 @@ export async function deletePost(userID, postID) {
   )
     .then((response) => {
       if (response.status === 200) {
-        console.log('Deleted')
+        return { code: 200 }
       } else if (response.status === 401) {
         throw new ErrorMessage('Unauthorized', 401)
       } else if (response.status === 403) {
@@ -125,12 +126,12 @@ export async function deletePost(userID, postID) {
     })
 }
 
-export async function updatePost(userID, postID, postBody) {
+export async function updatePost (userID, postID, postBody) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/post/', postID),
     {
-      method: 'patch',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'X-Authorization': token
@@ -140,7 +141,7 @@ export async function updatePost(userID, postID, postBody) {
   )
     .then((response) => {
       if (response.status === 200) {
-        console.log('Updated')
+        return { code: 200 }
       } else if (response.status === 400) {
         throw new ErrorMessage('Bad Request', 400)
       } else if (response.status === 401) {
@@ -158,7 +159,7 @@ export async function updatePost(userID, postID, postBody) {
     })
 }
 
-export async function likePost(userID, postID) {
+export async function likePost (userID, postID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(
@@ -168,7 +169,7 @@ export async function likePost(userID, postID) {
       '/like'
     ),
     {
-      method: 'post',
+      method: 'POST',
       headers: {
         'X-Authorization': token
       }
@@ -192,7 +193,7 @@ export async function likePost(userID, postID) {
     })
 }
 
-export async function unlikePost(userID, postID) {
+export async function unlikePost (userID, postID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(
@@ -202,7 +203,7 @@ export async function unlikePost(userID, postID) {
       '/like'
     ),
     {
-      method: 'delete',
+      method: 'DELETE',
       headers: {
         'X-Authorization': token
       }

@@ -4,11 +4,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Feed from '../Feed'
 import Search from '../Search'
 import OtherUserProfile from '../OtherUserProfile'
+import SinglePost from '../SinglePost'
 
 const Stack = createNativeStackNavigator()
 
 class AuthStackNavigator extends Component {
-  render () {
+  render() {
     return (
       <Stack.Navigator initialRouteName='Feed'>
         <Stack.Screen
@@ -24,6 +25,11 @@ class AuthStackNavigator extends Component {
         <Stack.Screen
           name='TempHeader'
           component={OtherUserProfile}
+          options={{ gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name='Single Post'
+          component={SinglePost}
           options={{ gestureEnabled: false }}
         />
       </Stack.Navigator>
