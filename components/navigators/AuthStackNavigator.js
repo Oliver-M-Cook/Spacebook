@@ -15,22 +15,22 @@ class AuthStackNavigator extends Component {
         <Stack.Screen
           name='Feed'
           component={Feed}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen
           name='Search'
           component={Search}
-          options={{ gestureEnabled: false }}
+          options={{ gestureEnabled: false, headerShown: false }}
         />
         <Stack.Screen
           name='TempHeader'
           component={OtherUserProfile}
-          options={{ gestureEnabled: false }}
+          options={{ gestureEnabled: false, headerShown: false }}
         />
         <Stack.Screen
           name='Single Post'
           component={SinglePost}
-          options={{ gestureEnabled: false }}
+          options={{ gestureEnabled: false, headerShown: false }}
         />
       </Stack.Navigator>
     )

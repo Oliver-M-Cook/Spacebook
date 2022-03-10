@@ -18,7 +18,18 @@ import {
 } from './Functions/PostManagement'
 
 const RenderFlatListHeader = () => {
-  return <Text style={{ fontSize: 25, fontWeight: 'bold' }}>Posts</Text>
+  return (
+    <Text
+      style={{
+        fontSize: 25,
+        fontWeight: 'bold',
+        borderBottomWidth: 2,
+        borderColor: '#985F6F'
+      }}
+    >
+      Posts
+    </Text>
+  )
 }
 
 const PostComponent = (props) => {
@@ -28,7 +39,6 @@ const PostComponent = (props) => {
   const [posts, setPosts] = useState([])
   const [refresh, setRefresh] = useState(true)
   const [userState, setUser] = useState()
-  const [timer, setTimer] = useState('')
 
   const isInitialMount = useRef(true)
 
@@ -107,13 +117,19 @@ const PostComponent = (props) => {
         <View
           style={{
             margin: 10,
-            backgroundColor: 'yellow',
+            backgroundColor: '#DCD6F7',
             borderWidth: 2,
             borderColor: '#985F6F',
             flex: 1
           }}
         >
-          <View style={{ padding: 10, borderBottomWidth: 2 }}>
+          <View
+            style={{
+              padding: 10,
+              borderBottomWidth: 2,
+              borderColor: '#985F6F'
+            }}
+          >
             <TextInput
               placeholder='Enter Post Text...'
               multiline
@@ -122,40 +138,68 @@ const PostComponent = (props) => {
               value={postText}
             />
             <TouchableOpacity
-              style={{ backgroundColor: 'green' }}
               onPress={sendPostText}
+              style={{ alignSelf: 'center', marginTop: 10 }}
             >
-              <Text>Post</Text>
+              <Text
+                style={{
+                  backgroundColor: '#B4869F',
+                  alignSelf: 'center',
+                  fontSize: 15,
+                  padding: 10,
+                  borderRadius: 10
+                }}
+              >
+                Post
+              </Text>
             </TouchableOpacity>
           </View>
+          <RenderFlatListHeader />
           <FlatList
             data={posts}
+            style={{ flex: 1 }}
             renderItem={({ item, index }) => (
-              <View style={{ marginBottom: 10 }}>
+              <TouchableOpacity
+                style={{
+                  paddingBottom: 10,
+                  paddingLeft: 10,
+                  borderBottomWidth: 1,
+                  paddingTop: 5,
+                  borderColor: '#985F6F'
+                }}
+                onPress={() =>
+                  navigation.navigate('Single Post', {
+                    postID: item.post_id,
+                    userID: userState
+                  })}
+              >
                 <Text>
                   Posted By:{' '}
                   {item.author.first_name + ' ' + item.author.last_name}
                 </Text>
-                <TouchableOpacity
-                  style={{ marginBottom: 5 }}
-                  onPress={() =>
-                    navigation.navigate('Single Post', {
-                      postID: item.post_id,
-                      userID: userState
-                    })}
-                >
-                  <Text>{item.text}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => handleLike(props.userID, item.post_id)}
-                >
-                  <Text>Like/Unlike</Text>
-                </TouchableOpacity>
-                <Text>Number of Likes: {item.numLikes}</Text>
-              </View>
+                <Text style={{ fontSize: 15, marginTop: 5 }}>{item.text}</Text>
+                <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                  <TouchableOpacity
+                    onPress={() => handleLike(props.userID, item.post_id)}
+                    style={{ alignSelf: 'flex-start' }}
+                  >
+                    <Text
+                      style={{
+                        backgroundColor: '#B4869F',
+                        padding: 5,
+                        borderRadius: 10,
+                        fontSize: 15
+                      }}
+                    >
+                      Like/Unlike
+                    </Text>
+                  </TouchableOpacity>
+                  <Text style={{ alignSelf: 'center', paddingLeft: 10 }}>
+                    Number of Likes: {item.numLikes}
+                  </Text>
+                </View>
+              </TouchableOpacity>
             )}
-            ListHeaderComponent={RenderFlatListHeader}
-            StickyHeaderComponent={[0]}
             keyExtractor={(item) => item.post_id}
             extraData={refresh}
           />

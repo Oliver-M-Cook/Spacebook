@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { deletePost, getPost, updatePost } from './Functions/PostManagement'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import CustomHeader from './CustomHeader'
 
 const SinglePost = (props) => {
   const [postData, setData] = useState()
@@ -76,6 +77,7 @@ const SinglePost = (props) => {
     if (postData.isAuthor) {
       return (
         <View>
+          <CustomHeader />
           <Text>You Posted:</Text>
           <TextInput
             placeholder='New Post Text...'
@@ -97,6 +99,8 @@ const SinglePost = (props) => {
     } else {
       return (
         <View>
+          <CustomHeader />
+
           <Text>
             {postData.author.first_name} {postData.author.last_name} Posted:
           </Text>

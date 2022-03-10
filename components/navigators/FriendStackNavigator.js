@@ -10,7 +10,7 @@ import SinglePost from '../SinglePost'
 const Stack = createNativeStackNavigator()
 
 class FriendStackNavigator extends Component {
-  render () {
+  render() {
     return (
       <Stack.Navigator>
         <Stack.Screen
@@ -26,17 +26,17 @@ class FriendStackNavigator extends Component {
         <Stack.Screen
           name='Search'
           component={Search}
-          options={{ gestureEnabled: false }}
+          options={{ gestureEnabled: false, headerShown: false }}
         />
         <Stack.Screen
           name='TempHeader'
           component={OtherUserProfile}
-          options={{ gestureEnabled: false }}
+          options={{ gestureEnabled: false, headerShown: false }}
         />
         <Stack.Screen
           name='Single Post'
           component={SinglePost}
-          options={{ gestureEnabled: false }}
+          options={{ gestureEnabled: false, headerShown: false }}
         />
       </Stack.Navigator>
     )

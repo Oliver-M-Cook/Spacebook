@@ -5,6 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { uploadPicture } from './Functions/UserManagement'
 import { set } from 'react-native-reanimated'
 import { useFocusEffect } from '@react-navigation/native'
+import CustomHeader from './CustomHeader'
 
 const CameraScreen = (props) => {
   const [hasPermission, setHasPermission] = useState(null)
@@ -42,6 +43,7 @@ const CameraScreen = (props) => {
     if (cameraOn) {
       return (
         <View style={styles.container}>
+          <CustomHeader />
           <Camera style={styles.camera} type={type} ref={cameraRef}>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
@@ -58,7 +60,12 @@ const CameraScreen = (props) => {
       return null
     }
   } else {
-    return <Text>No access to camera</Text>
+    return (
+      <View>
+        <CustomHeader />
+        <Text>No access to camera</Text>
+      </View>
+    )
   }
 }
 

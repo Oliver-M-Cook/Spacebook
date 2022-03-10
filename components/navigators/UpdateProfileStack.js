@@ -10,7 +10,7 @@ import CameraScreen from '../CameraScreen'
 const Stack = createNativeStackNavigator()
 
 class UpdateProfileStack extends Component {
-  render () {
+  render() {
     return (
       <Stack.Navigator initialRouteName='Change Profile'>
         <Stack.Screen
@@ -21,17 +21,17 @@ class UpdateProfileStack extends Component {
         <Stack.Screen
           name='Search'
           component={Search}
-          options={{ gestureEnabled: false }}
+          options={{ gestureEnabled: false, headerShown: false }}
         />
         <Stack.Screen
           name='TempHeader'
           component={OtherUserProfile}
-          options={{ gestureEnabled: false }}
+          options={{ gestureEnabled: false, headerShown: false }}
         />
         <Stack.Screen
           name='Camera'
           component={CameraScreen}
-          options={{ gestureEnabled: false }}
+          options={{ gestureEnabled: false, headerShown: false }}
         />
       </Stack.Navigator>
     )

@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { Image, Text, View } from 'react-native'
+import CustomHeader from './CustomHeader'
 import FriendButton from './FriendButton'
 import PostComponent from './PostComponent'
 
@@ -21,6 +22,7 @@ class OtherUserProfile extends Component {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: '#DCD6F7' }}>
+        <CustomHeader />
         <View
           style={{
             flexDirection: 'row',

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
+import CustomHeader from './CustomHeader'
 import { getProfilePicture } from './Functions/UserManagement'
 
 class Search extends Component {
@@ -51,6 +52,7 @@ class Search extends Component {
     if (!this.state.isLoading) {
       return (
         <SafeAreaView>
+          <CustomHeader />
           <FlatList
             data={JSON.parse(this.props.route.params.output)}
             renderItem={({ item, index }) => (
