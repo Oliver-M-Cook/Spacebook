@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import { getFriends } from './Functions/FunctionStorage'
 import TopBar from './TopBar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getProfilePicture } from './Functions/UserManagement'
+import { getFriends } from './Functions/FriendManagement'
 
 const RenderFlatListHeader = () => {
   return <Text style={{ fontSize: 25, fontWeight: 'bold' }}>Friends List</Text>
@@ -93,7 +93,8 @@ const RenderFlatList = (props) => {
                 width: 50,
                 height: 50,
                 borderWidth: 2,
-                borderRadius: 25
+                borderRadius: 25,
+                borderColor: '#B4869F'
               }}
             />
             <Text style={{ paddingLeft: 10 }}>

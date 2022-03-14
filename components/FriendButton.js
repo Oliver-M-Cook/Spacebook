@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
-import { addFriend, getFriends } from './Functions/FunctionStorage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { addFriend, getFriends } from './Functions/FriendManagement'
 
 class FriendButton extends Component {
   constructor(props) {

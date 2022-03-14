@@ -1,9 +1,9 @@
 import { Component } from 'react'
 import { Button, StyleSheet, TextInput, View } from 'react-native'
-import { signUp } from './Functions/FunctionStorage'
+import { signUp } from './Functions/UserManagement'
 
 class SignUp extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -30,7 +30,7 @@ class SignUp extends Component {
     this.setState({ password: password })
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         <TextInput

@@ -1,8 +1,10 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import React, { useEffect, useRef, useState } from 'react'
 import {
+  Alert,
   FlatList,
   Image,
+  Modal,
   StyleSheet,
   Text,
   TextInput,
@@ -39,6 +41,7 @@ const PostComponent = (props) => {
   const [posts, setPosts] = useState([])
   const [refresh, setRefresh] = useState(true)
   const [userState, setUser] = useState()
+  const [modalVisible, setModalVisible] = useState(false)
 
   const isInitialMount = useRef(true)
 
@@ -111,6 +114,19 @@ const PostComponent = (props) => {
     }
   }
 
+  const handleDraft = async () => {
+    const newDraft = { text: postText, userID: props.userID }
+    const draftsString = await AsyncStorage.getItem('@drafts')
+    if (draftsString) {
+      const draft = JSON.parse(draftsString)
+      draft.push(newDraft)
+      await AsyncStorage.setItem('@drafts', JSON.stringify(draft))
+      console.log(draft)
+    } else {
+      await AsyncStorage.setItem('@drafts', JSON.stringify([newDraft]))
+    }
+  }
+
   if (!isLoading) {
     if (isFriends || props.loggedIn) {
       return (
@@ -123,6 +139,31 @@ const PostComponent = (props) => {
             flex: 1
           }}
         >
+          <Modal
+            animationType='slide'
+            transparent
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(false)
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <View
+                style={{ backgroundColor: '#DCD6F7', margin: 20, padding: 35 }}
+              >
+                <Text>Hello World</Text>
+                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                  <Text>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
           <View
             style={{
               padding: 10,
@@ -137,6 +178,41 @@ const PostComponent = (props) => {
               onChangeText={handlePostText}
               value={postText}
             />
+
+            <TouchableOpacity
+              onPress={handleDraft}
+              style={{ alignSelf: 'center', marginTop: 10 }}
+            >
+              <Text
+                style={{
+                  backgroundColor: '#B4869F',
+                  alignSelf: 'center',
+                  fontSize: 15,
+                  padding: 10,
+                  borderRadius: 10
+                }}
+              >
+                Save To Drafts
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => setModalVisible(true)}
+              style={{ alignSelf: 'center', marginTop: 10 }}
+            >
+              <Text
+                style={{
+                  backgroundColor: '#B4869F',
+                  alignSelf: 'center',
+                  fontSize: 15,
+                  padding: 10,
+                  borderRadius: 10
+                }}
+              >
+                Drafts
+              </Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
               onPress={sendPostText}
               style={{ alignSelf: 'center', marginTop: 10 }}

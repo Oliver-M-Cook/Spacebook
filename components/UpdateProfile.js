@@ -100,48 +100,96 @@ const UpdateProfile = (props) => {
 
   if (!isLoading) {
     return (
-      <View>
+      <View style={{ backgroundColor: '#DCD6F7', flex: 1 }}>
         <TopBar navigation={props.navigation} />
-        <Image
-          source={{ uri: profilePicture }}
-          style={{
-            width: 150,
-            height: 150,
-            borderWidth: 2,
-            borderRadius: 75,
-            borderColor: '#B4869F'
-          }}
-        />
-        <TouchableOpacity onPress={() => props.navigation.navigate('Camera')}>
-          <Text>Change Photo</Text>
-        </TouchableOpacity>
-        <Text>Firstname: {userData.first_name}</Text>
-        <TextInput
-          placeholder='New Firstname...'
-          value={firstname}
-          onChangeText={handleFirstname}
-        />
-        <Text>Lastname: {userData.last_name}</Text>
-        <TextInput
-          placeholder='New Lastname...'
-          value={lastname}
-          onChangeText={handleLastname}
-        />
-        <Text>Email: {userData.email}</Text>
-        <TextInput
-          placeholder='New Email...'
-          value={email}
-          onChangeText={handleEmail}
-        />
-        <Text>Password:</Text>
-        <TextInput
-          placeholder='New Password...'
-          value={password}
-          onChangeText={handlePassword}
-        />
-        <TouchableOpacity onPress={submitChanges}>
-          <Text>Submit Changes</Text>
-        </TouchableOpacity>
+        <View style={{ margin: 15 }}>
+          <View style={{ flexDirection: 'row' }}>
+            <Image
+              source={{ uri: profilePicture }}
+              style={{
+                width: 150,
+                height: 150,
+                borderWidth: 2,
+                borderRadius: 75,
+                borderColor: '#B4869F'
+              }}
+            />
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate('Camera')}
+              >
+                <Text
+                  style={{
+                    backgroundColor: '#B4869F',
+                    padding: 10,
+                    fontSize: 15,
+                    borderRadius: 20
+                  }}
+                >
+                  Change Photo
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.textBox}>
+            <Text style={styles.text}>Firstname: {userData.first_name}</Text>
+            <TextInput
+              placeholder='New Firstname...'
+              value={firstname}
+              onChangeText={handleFirstname}
+              style={styles.text}
+            />
+          </View>
+          <View style={styles.textBox}>
+            <Text style={styles.text}>Lastname: {userData.last_name}</Text>
+            <TextInput
+              placeholder='New Lastname...'
+              value={lastname}
+              onChangeText={handleLastname}
+              style={styles.text}
+            />
+          </View>
+          <View style={styles.textBox}>
+            <Text style={styles.text}>Email: {userData.email}</Text>
+            <TextInput
+              placeholder='New Email...'
+              value={email}
+              onChangeText={handleEmail}
+              style={styles.text}
+            />
+          </View>
+          <View style={styles.textBox}>
+            <Text style={styles.text}>Password:</Text>
+            <TextInput
+              placeholder='New Password...'
+              value={password}
+              onChangeText={handlePassword}
+              style={styles.text}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={submitChanges}
+            style={{ marginTop: 30, alignSelf: 'center' }}
+          >
+            <Text
+              style={{
+                padding: 15,
+                fontSize: 15,
+                backgroundColor: '#B4869F',
+                borderRadius: 20
+              }}
+            >
+              Submit Changes
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     )
   } else {
@@ -152,5 +200,15 @@ const UpdateProfile = (props) => {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  textBox: {
+    flex: 1,
+    marginTop: 20
+  },
+  text: {
+    fontSize: 15
+  }
+})
 
 export default UpdateProfile

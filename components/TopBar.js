@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getProfilePicture } from './Functions/UserManagement'
-import { search } from './Functions/FunctionStorage'
+import { search } from './Functions/FriendManagement'
 
 const TopBar = (props) => {
   const [query, setQuery] = useState('')
@@ -35,7 +35,8 @@ const TopBar = (props) => {
     } else {
       navigation.navigate('Search', {
         output: response.users,
-        userIDs: response.userIDs
+        userIDs: response.userIDs,
+        query: query
       })
     }
   }

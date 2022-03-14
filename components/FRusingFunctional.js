@@ -11,7 +11,7 @@ import {
   acceptFriendRequest,
   getFriendRequests,
   rejectFriendRequest
-} from './Functions/FunctionStorage'
+} from './Functions/FriendManagement'
 import TopBar from './TopBar'
 
 const RenderFlatListHeader = () => {
