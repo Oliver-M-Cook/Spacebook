@@ -1,6 +1,12 @@
-import { useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import React, { useEffect, useRef, useState } from 'react'
-import { Text, TextInput, TouchableOpacity, View } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { deletePost, getPost, updatePost } from './Functions/PostManagement'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import CustomHeader from './CustomHeader'
@@ -9,8 +15,11 @@ const SinglePost = (props) => {
   const [postData, setData] = useState()
   const [isLoading, setLoading] = useState(true)
   const [postText, setText] = useState('')
+  const [blankPost, setBlankPost] = useState(false)
 
   const isInitialMount = useRef(true)
+
+  const navigation = useNavigation()
 
   const handleNewText = (text) => {
     setText(text)
@@ -19,17 +28,30 @@ const SinglePost = (props) => {
   const handleDelete = async () => {
     const userID = props.route.params.userID
     const response = await deletePost(userID, postData.id)
-    console.log(response)
+    if (response.code === 200) {
+      navigation.goBack()
+    } else {
+      console.log(response)
+    }
   }
 
   const handleUpdate = async () => {
-    const userID = props.route.params.userID
-    const reqBody = {
-      text: postText
-    }
-    const response = await updatePost(userID, postData.id, reqBody)
+    if (postText.length !== 0) {
+      setBlankPost(false)
+      const userID = props.route.params.userID
+      const reqBody = {
+        text: postText
+      }
+      const response = await updatePost(userID, postData.id, reqBody)
 
-    console.log(response)
+      if (response.code === 200) {
+        navigation.goBack()
+      } else {
+        console.log(response)
+      }
+    } else {
+      setBlankPost(true)
+    }
   }
 
   useEffect(() => {
@@ -73,42 +95,58 @@ const SinglePost = (props) => {
       setup()
     }, [])
   )
+
+  const RenderNoPost = () => {
+    return (
+      <Text style={{ color: 'red', fontSize: 15 }}>Post Cannot Be Blank</Text>
+    )
+  }
+
   if (!isLoading) {
     if (postData.isAuthor) {
       return (
-        <View>
+        <View style={styles.container}>
           <CustomHeader />
           <Text>You Posted:</Text>
           <TextInput
             placeholder='New Post Text...'
+            multiline
+            style={{ height: 100 }}
             value={postText}
             onChangeText={handleNewText}
           />
-          <Text>
+          {blankPost && <RenderNoPost />}
+          <Text style={styles.text}>
             At {postData.time} on {postData.date}
           </Text>
-          <Text>And has {postData.numLikes} likes</Text>
-          <TouchableOpacity style={{ marginBottom: 5 }} onPress={handleDelete}>
-            <Text>Delete</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleUpdate}>
-            <Text>Update</Text>
-          </TouchableOpacity>
+          <Text style={styles.text}>And has {postData.numLikes} likes</Text>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}
+          >
+            <TouchableOpacity
+              style={{ marginBottom: 5 }}
+              onPress={handleDelete}
+            >
+              <Text style={styles.button}>Delete</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleUpdate}>
+              <Text style={styles.button}>Update</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )
     } else {
       return (
-        <View>
+        <View style={styles.container}>
           <CustomHeader />
-
-          <Text>
+          <Text style={styles.text}>
             {postData.author.first_name} {postData.author.last_name} Posted:
           </Text>
-          <Text>{postData.text}</Text>
-          <Text>
+          <Text style={styles.text}>{postData.text}</Text>
+          <Text style={styles.text}>
             At {postData.time} on {postData.date}
           </Text>
-          <Text>And has {postData.numLikes} likes</Text>
+          <Text style={styles.text}>And has {postData.numLikes} likes</Text>
         </View>
       )
     }
@@ -120,5 +158,21 @@ const SinglePost = (props) => {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#B4869F',
+    padding: 5,
+    borderRadius: 10,
+    fontSize: 20
+  },
+  container: {
+    backgroundColor: '#DCD6F7',
+    flex: 1
+  },
+  text: {
+    fontSize: 15
+  }
+})
 
 export default SinglePost

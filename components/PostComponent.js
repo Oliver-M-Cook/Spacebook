@@ -42,6 +42,10 @@ const PostComponent = (props) => {
   const [refresh, setRefresh] = useState(true)
   const [userState, setUser] = useState()
   const [modalVisible, setModalVisible] = useState(false)
+  const [drafts, setDrafts] = useState([])
+  const [scheduleTimer, setScheduleTimer] = useState([])
+  const [refreshDrafts, setDraftRefresh] = useState(true)
+  const [blankPost, setBlankPost] = useState(false)
 
   const isInitialMount = useRef(true)
 
@@ -93,13 +97,31 @@ const PostComponent = (props) => {
     setPostText(text)
   }
 
+  const handleModal = async () => {
+    const data = await AsyncStorage.getItem('@drafts')
+    setDrafts(JSON.parse(data))
+    setModalVisible(true)
+  }
+
+  const handleScheduleTimer = (index, value) => {
+    // setScheduleTimer(value.replace(/[^0-9]/g, ''))
+    const tempArray = scheduleTimer
+    tempArray[index] = value.replace(/[^0-9]/g, '')
+    setScheduleTimer(tempArray)
+  }
+
   const sendPostText = async () => {
-    const response = await sendPost({ text: postText }, props.userID)
-    if (response.code === 401) {
-      navigation.navigate('Main Menu')
+    if (postText.length !== 0) {
+      setBlankPost(false)
+      const response = await sendPost({ text: postText }, props.userID)
+      if (response.code === 401) {
+        navigation.navigate('Main Menu')
+      } else {
+        setPostText('')
+        fetchPosts()
+      }
     } else {
-      setPostText('')
-      fetchPosts()
+      setBlankPost(true)
     }
   }
 
@@ -115,16 +137,55 @@ const PostComponent = (props) => {
   }
 
   const handleDraft = async () => {
-    const newDraft = { text: postText, userID: props.userID }
-    const draftsString = await AsyncStorage.getItem('@drafts')
-    if (draftsString) {
-      const draft = JSON.parse(draftsString)
-      draft.push(newDraft)
-      await AsyncStorage.setItem('@drafts', JSON.stringify(draft))
-      console.log(draft)
+    if (postText.length !== 0) {
+      setBlankPost(false)
+      const newDraft = { text: postText, userID: props.userID }
+      const draftsString = await AsyncStorage.getItem('@drafts')
+      setPostText('')
+      if (draftsString) {
+        const draft = JSON.parse(draftsString)
+        draft.push(newDraft)
+        await AsyncStorage.setItem('@drafts', JSON.stringify(draft))
+      } else {
+        await AsyncStorage.setItem('@drafts', JSON.stringify([newDraft]))
+      }
     } else {
-      await AsyncStorage.setItem('@drafts', JSON.stringify([newDraft]))
+      setBlankPost(true)
     }
+  }
+
+  const handleCloseModal = () => {
+    setScheduleTimer([])
+    setModalVisible(false)
+  }
+
+  const handleSchedule = async (index) => {
+    console.log(scheduleTimer[index])
+    if (index >= 0) {
+      console.log('test')
+      const timer = scheduleTimer[index]
+      let dataArray = await AsyncStorage.getItem('@drafts')
+      dataArray = JSON.parse(dataArray)
+      const data = dataArray[index]
+      const fomattedText = { text: data.text }
+      setTimeout(sendPost, timer * 60 * 1000, fomattedText, data.userID)
+    }
+  }
+
+  const handleDeleteDraft = async (index) => {
+    console.log(index)
+    const newDrafts = drafts
+    newDrafts.splice(index, 1)
+    setDrafts(newDrafts)
+    setScheduleTimer([])
+    setDraftRefresh(!refreshDrafts)
+    await AsyncStorage.setItem('@drafts', JSON.stringify(newDrafts))
+  }
+
+  const RenderNoPost = () => {
+    return (
+      <Text style={{ color: 'red', fontSize: 15 }}>Post Cannot Be Blank</Text>
+    )
   }
 
   if (!isLoading) {
@@ -155,11 +216,49 @@ const PostComponent = (props) => {
               }}
             >
               <View
-                style={{ backgroundColor: '#DCD6F7', margin: 20, padding: 35 }}
+                style={{
+                  backgroundColor: '#DCD6F7',
+                  margin: 10,
+                  padding: 20,
+                  borderWidth: 2,
+                  borderColor: '#985F6F',
+                  borderRadius: 20
+                }}
               >
-                <Text>Hello World</Text>
-                <TouchableOpacity onPress={() => setModalVisible(false)}>
-                  <Text>Close</Text>
+                <FlatList
+                  data={drafts}
+                  renderItem={({ item, index }) => (
+                    <View>
+                      <Text>{item.text}</Text>
+                      <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                        <TouchableOpacity
+                          onPress={() => handleDeleteDraft(index)}
+                          style={{ marginRight: 5 }}
+                        >
+                          <Text style={styles.button}>Delete</Text>
+                        </TouchableOpacity>
+                        <TextInput
+                          placeholder='Enter time in minutes...'
+                          onChangeText={(value) =>
+                            handleScheduleTimer(index, value)}
+                          value={scheduleTimer[index]}
+                        />
+                        <TouchableOpacity
+                          onPress={() => handleSchedule(index)}
+                          style={{ marginRight: 5 }}
+                        >
+                          <Text style={styles.button}>Schedule</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  )}
+                  extraData={refreshDrafts}
+                />
+                <TouchableOpacity
+                  onPress={handleCloseModal}
+                  style={{ alignSelf: 'flex-start', marginTop: 5 }}
+                >
+                  <Text style={styles.button}>Close</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -178,57 +277,61 @@ const PostComponent = (props) => {
               onChangeText={handlePostText}
               value={postText}
             />
-
-            <TouchableOpacity
-              onPress={handleDraft}
-              style={{ alignSelf: 'center', marginTop: 10 }}
+            {blankPost && <RenderNoPost />}
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-around' }}
             >
-              <Text
-                style={{
-                  backgroundColor: '#B4869F',
-                  alignSelf: 'center',
-                  fontSize: 15,
-                  padding: 10,
-                  borderRadius: 10
-                }}
+              <TouchableOpacity
+                onPress={handleDraft}
+                style={{ alignSelf: 'center', marginTop: 10 }}
               >
-                Save To Drafts
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    backgroundColor: '#B4869F',
+                    alignSelf: 'center',
+                    fontSize: 15,
+                    padding: 10,
+                    borderRadius: 10
+                  }}
+                >
+                  Save To Drafts
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => setModalVisible(true)}
-              style={{ alignSelf: 'center', marginTop: 10 }}
-            >
-              <Text
-                style={{
-                  backgroundColor: '#B4869F',
-                  alignSelf: 'center',
-                  fontSize: 15,
-                  padding: 10,
-                  borderRadius: 10
-                }}
+              <TouchableOpacity
+                onPress={handleModal}
+                style={{ alignSelf: 'center', marginTop: 10 }}
               >
-                Drafts
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    backgroundColor: '#B4869F',
+                    alignSelf: 'center',
+                    fontSize: 15,
+                    padding: 10,
+                    borderRadius: 10
+                  }}
+                >
+                  Drafts
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={sendPostText}
-              style={{ alignSelf: 'center', marginTop: 10 }}
-            >
-              <Text
-                style={{
-                  backgroundColor: '#B4869F',
-                  alignSelf: 'center',
-                  fontSize: 15,
-                  padding: 10,
-                  borderRadius: 10
-                }}
+              <TouchableOpacity
+                onPress={sendPostText}
+                style={{ alignSelf: 'center', marginTop: 10 }}
               >
-                Post
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    backgroundColor: '#B4869F',
+                    alignSelf: 'center',
+                    fontSize: 15,
+                    padding: 10,
+                    borderRadius: 10
+                  }}
+                >
+                  Post
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <RenderFlatListHeader />
           <FlatList
@@ -296,5 +399,14 @@ const PostComponent = (props) => {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#B4869F',
+    padding: 5,
+    borderRadius: 10,
+    fontSize: 15
+  }
+})
 
 export default PostComponent

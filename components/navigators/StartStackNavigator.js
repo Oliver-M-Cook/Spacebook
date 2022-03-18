@@ -9,15 +9,19 @@ import Home from '../Home'
 const Stack = createNativeStackNavigator()
 
 class StartStackNavigator extends Component {
-  render () {
+  render() {
     return (
-      <Stack.Navigator initialRouteName='Home'>
+      <Stack.Navigator initialRouteName='Main Menu'>
         <Stack.Screen
           name='Main Menu'
           component={MainMenu}
           options={{ headerShown: false, gestureEnabled: false }}
         />
-        <Stack.Screen name='Sign Up' component={SignUp} />
+        <Stack.Screen
+          name='Sign Up'
+          component={SignUp}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
         <Stack.Screen name='Login' component={Login} />
         <Stack.Screen
           name='Home'

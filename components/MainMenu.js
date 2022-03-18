@@ -1,25 +1,29 @@
 import { Component } from 'react'
-import { Button, StyleSheet, View } from 'react-native'
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import * as React from 'react'
 
 class MainMenu extends Component {
   render () {
     return (
       <View style={styles.container}>
-        <View style={styles.buttonStyle}>
-          <Button
-            style={styles.buttonStyle}
-            title='Sign Up'
-            onPress={() => this.props.navigation.navigate('Sign Up')}
-          />
-        </View>
-        <View style={styles.buttonStyle}>
-          <Button
-            style={styles.buttonStyle}
-            title='Login'
+        <Text style={styles.title}>Spacebook</Text>
+        <Text style={styles.title}>By Oliver Cook</Text>
+        <Text style={styles.title}>19041856</Text>
+
+        <TouchableOpacity
+          style={{ marginBottom: 20, marginTop: 20 }}
+          onPress={() => this.props.navigation.navigate('Sign Up')}
+        >
+          <Text style={styles.button}>Sign Up</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text
+            style={styles.button}
             onPress={() => this.props.navigation.navigate('Login')}
-          />
-        </View>
+          >
+            Login
+          </Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -28,13 +32,19 @@ class MainMenu extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#DCD6F7',
     alignItems: 'center',
     justifyContent: 'center'
   },
 
-  buttonStyle: {
-    padding: 10
+  button: {
+    backgroundColor: '#B4869F',
+    padding: 5,
+    borderRadius: 10,
+    fontSize: 20
+  },
+  title: {
+    fontSize: 30
   }
 })
 

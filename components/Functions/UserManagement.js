@@ -3,13 +3,13 @@ import ErrorMessage from '../ErrorMessage'
 
 /* global fetch */
 
-export async function signUp () {
+export async function signUp (postBody) {
   return fetch('http://localhost:3333/api/1.0.0/user', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(this.state)
+    body: JSON.stringify(postBody)
   })
     .then((response) => {
       if (response.status === 201) {
@@ -22,7 +22,8 @@ export async function signUp () {
     })
     .then((responseJson) => {
       console.log('User created with ID: ', responseJson)
-      this.props.navigation.navigate('Main Menu')
+      // this.props.navigation.navigate('Main Menu')
+      return { code: 201 }
     })
     .catch((error) => {
       console.log(error)
@@ -61,6 +62,7 @@ export async function logout () {
   const token = await AsyncStorage.getItem('@session_token')
   await AsyncStorage.removeItem('@session_token')
   await AsyncStorage.removeItem('@user_id')
+  await AsyncStorage.removeItem('@drafts')
   return fetch('http://localhost:3333/api/1.0.0/logout', {
     method: 'POST',
     headers: {
