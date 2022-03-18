@@ -5,7 +5,7 @@ import FriendButton from './FriendButton'
 import PostComponent from './PostComponent'
 
 class OtherUserProfile extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -13,15 +13,17 @@ class OtherUserProfile extends Component {
     }
   }
 
-  componentDidMount() {
+  // On mount sets userData
+  componentDidMount () {
     this.setState({
       userData: this.props.route.params.userData
     })
   }
 
-  render() {
+  render () {
     return (
       <View style={{ flex: 1, backgroundColor: '#DCD6F7' }}>
+        {/* Renders the custom header to the screen */}
         <CustomHeader />
         <View
           style={{
@@ -32,6 +34,7 @@ class OtherUserProfile extends Component {
             borderColor: '#985F6F'
           }}
         >
+          {/* Adds an image that was sent through props from the previous screen */}
           <Image
             source={{ uri: this.props.route.params.profilePicture }}
             style={{
@@ -57,6 +60,7 @@ class OtherUserProfile extends Component {
             <FriendButton userID={this.state.userData.user_id} />
           </View>
         </View>
+        {/* Renders the users posts */}
         <PostComponent userID={this.state.userData.user_id} />
       </View>
     )

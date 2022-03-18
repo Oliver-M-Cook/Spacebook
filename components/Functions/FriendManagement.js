@@ -3,6 +3,7 @@ import ErrorMessage from '../ErrorMessage'
 
 /* global fetch */
 
+// getFriends function fetches friends list from the server and returns the JSON response
 export async function getFriends (userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
@@ -31,11 +32,11 @@ export async function getFriends (userID) {
       }
     })
     .catch((error) => {
-      console.log(error)
       return error
     })
 }
 
+// addFriend function sends a POST to the server to send a friend request
 export async function addFriend (userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
@@ -61,11 +62,11 @@ export async function addFriend (userID) {
       }
     })
     .catch((error) => {
-      console.log(error)
       return error
     })
 }
 
+// getFriendRequests fetches all requests from the server
 export async function getFriendRequests () {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch('http://localhost:3333/api/1.0.0/friendrequests', {
@@ -84,11 +85,11 @@ export async function getFriendRequests () {
       }
     })
     .catch((error) => {
-      console.log(error)
       return error
     })
 }
 
+// acceptFriendRequest sends a POST to accept the friend request
 export async function acceptFriendRequest (userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
@@ -102,7 +103,7 @@ export async function acceptFriendRequest (userID) {
   )
     .then((response) => {
       if (response.status === 200 || response.status === 201) {
-        console.log('Accepted')
+        return { code: 201 }
       } else if (response.status === 401) {
         throw new ErrorMessage('Unauthorized', 401)
       } else if (response.status === 404) {
@@ -112,11 +113,11 @@ export async function acceptFriendRequest (userID) {
       }
     })
     .catch((error) => {
-      console.log(error)
       return error
     })
 }
 
+// rejectFriendRequest deletes the request from the server
 export async function rejectFriendRequest (userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
@@ -130,7 +131,7 @@ export async function rejectFriendRequest (userID) {
   )
     .then((response) => {
       if (response.status === 200) {
-        console.log('Rejected')
+        return { code: 200 }
       } else if (response.status === 401) {
         throw new ErrorMessage('Unauthorized', 401)
       } else if (response.status === 404) {
@@ -140,11 +141,11 @@ export async function rejectFriendRequest (userID) {
       }
     })
     .catch((error) => {
-      console.log(error)
       return error
     })
 }
 
+// search function searches the database for certain users
 export async function search (query, offset) {
   const token = await AsyncStorage.getItem('@session_token')
   const userID = await AsyncStorage.getItem('@user_id')
@@ -174,6 +175,7 @@ export async function search (query, offset) {
       }
     })
     .then((responseJson) => {
+      // This section of code takes out the logged user so they don't appear in thier own searches
       let found = false
       let foundIndex = -1
       responseJson.forEach((user, index) => {

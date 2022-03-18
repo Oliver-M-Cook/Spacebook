@@ -3,6 +3,7 @@ import ErrorMessage from '../ErrorMessage'
 
 /* global fetch */
 
+// sends user data to create an account
 export async function signUp (postBody) {
   return fetch('http://localhost:3333/api/1.0.0/user', {
     method: 'POST',
@@ -21,23 +22,21 @@ export async function signUp (postBody) {
       }
     })
     .then((responseJson) => {
-      console.log('User created with ID: ', responseJson)
-      // this.props.navigation.navigate('Main Menu')
       return { code: 201 }
     })
     .catch((error) => {
-      console.log(error)
       return error
     })
 }
 
-export async function login () {
+// sends login details and returns session token and userID
+export async function login (postBody) {
   return fetch('http://localhost:3333/api/1.0.0/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(this.state)
+    body: JSON.stringify(postBody)
   })
     .then((response) => {
       if (response.status === 200) {
@@ -49,20 +48,23 @@ export async function login () {
       }
     })
     .then(async (responseJson) => {
+      // saves the details into async storage for later use
       await AsyncStorage.setItem('@session_token', responseJson.token)
       await AsyncStorage.setItem('@user_id', responseJson.id.toString())
-      this.props.navigation.navigate('Feed')
+      return { code: 200 }
     })
     .catch((error) => {
       return error
     })
 }
 
+// logs user out and empties async storage for a new user
 export async function logout () {
   const token = await AsyncStorage.getItem('@session_token')
   await AsyncStorage.removeItem('@session_token')
   await AsyncStorage.removeItem('@user_id')
   await AsyncStorage.removeItem('@drafts')
+
   return fetch('http://localhost:3333/api/1.0.0/logout', {
     method: 'POST',
     headers: {
@@ -83,6 +85,7 @@ export async function logout () {
     })
 }
 
+// gets a singular user details given a userID
 export async function getUser (userID) {
   const token = await AsyncStorage.getItem('@session_token')
 
@@ -108,6 +111,7 @@ export async function getUser (userID) {
     })
 }
 
+// updates a users details using PATCH given userID and request body
 export async function updateUser (userID, data) {
   const token = await AsyncStorage.getItem('@session_token')
 
@@ -139,8 +143,10 @@ export async function updateUser (userID, data) {
     })
 }
 
+// gets profile picture from server given userID
 export async function getProfilePicture (userID) {
   const token = await AsyncStorage.getItem('@session_token')
+
   return fetch(
     'http://localhost:3333/api/1.0.0/user/'.concat(userID, '/photo'),
     {
@@ -170,10 +176,12 @@ export async function getProfilePicture (userID) {
     })
 }
 
+// uploads a new picture to the server
 export async function uploadPicture (data) {
   const userID = await AsyncStorage.getItem('@user_id')
   const token = await AsyncStorage.getItem('@session_token')
 
+  // converts data to base64 and converts that to a blob to be sent
   const res = await fetch(data.base64)
   const blob = await res.blob()
 

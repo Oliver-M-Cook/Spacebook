@@ -9,12 +9,15 @@ import SinglePost from '../SinglePost'
 const Stack = createNativeStackNavigator()
 
 class AuthStackNavigator extends Component {
-  render() {
+  render () {
     return (
+      // Builds stack navigator and sets the initial route to be loaded
       <Stack.Navigator initialRouteName='Feed'>
+        {/* Adds a screen to the stack that can be navigated to */}
         <Stack.Screen
           name='Feed'
           component={Feed}
+          // Disables header and gesture becuase a custom header is used
           options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen

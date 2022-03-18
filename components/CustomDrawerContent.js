@@ -6,6 +6,7 @@ import {
 import React from 'react'
 import { logout } from './Functions/UserManagement'
 
+// This is added to the drawer to add a logout button to the drawer navigator
 const CustomDrawerContent = (props) => {
   const handleLogout = async () => {
     await logout()

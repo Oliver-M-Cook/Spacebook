@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Component } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Feed from '../Feed'
 import Search from '../Search'
 import OtherUserProfile from '../OtherUserProfile'
 import UpdateProfile from '../UpdateProfile'
@@ -10,12 +9,15 @@ import CameraScreen from '../CameraScreen'
 const Stack = createNativeStackNavigator()
 
 class UpdateProfileStack extends Component {
-  render() {
+  render () {
     return (
+      // Builds stack used to hold the update profile screens
       <Stack.Navigator initialRouteName='Change Profile'>
+        {/* Adds a screen to the stack that can be navigated to */}
         <Stack.Screen
           name='Change Profile'
           component={UpdateProfile}
+          // Disables header and gesture becuase a custom header is used
           options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen

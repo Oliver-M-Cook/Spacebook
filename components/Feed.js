@@ -6,11 +6,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/native'
 
 const Feed = (props) => {
+  // Sets the states to be used by the screen
   const [userID, setUserID] = useState(-1)
   const [isLoading, setLoading] = useState(true)
 
+  // Stops useEffect from running on the first mount
   const isInitialMount = useRef(true)
 
+  // This would run twice, had to wait for userID to be updated before loading
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false
@@ -19,14 +22,15 @@ const Feed = (props) => {
     }
   }, [userID])
 
+  // Runs the functions inside when screen comes into focus
   useFocusEffect(
     React.useCallback(() => {
-      const fetchFriends = async () => {
+      const setup = async () => {
         const userIDLocal = parseInt(await AsyncStorage.getItem('@user_id'))
         setUserID(userIDLocal)
       }
 
-      fetchFriends()
+      setup()
     }, [])
   )
   if (!isLoading) {

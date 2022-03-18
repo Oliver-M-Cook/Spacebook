@@ -1,18 +1,11 @@
 import { Component } from 'react'
-import {
-  FlatList,
-  Image,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native'
+import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native'
 import CustomHeader from './CustomHeader'
 import { search } from './Functions/FriendManagement'
 import { getProfilePicture } from './Functions/UserManagement'
 
 class Search extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -26,18 +19,22 @@ class Search extends Component {
     this.offset = 0
   }
 
-  componentDidMount() {
+  // Runs the functions when the component is mounted to the screen
+  componentDidMount () {
     const userIDs = this.props.route.params.userIDs
 
     const setup = async () => {
+      // Gets the profile pictures of the users
       const profilePictures = await Promise.all(
         userIDs.map(async (userID) => {
           return getProfilePicture(userID)
         })
       )
 
+      // Sets the offset used in pagination
       this.offset = this.offset + 20
 
+      // Sets the state to hold the data for the screen
       this.setState({
         profilePictures: profilePictures,
         data: JSON.parse(this.props.route.params.output),
@@ -49,6 +46,7 @@ class Search extends Component {
     setup()
   }
 
+  // This function gets more data when load more is pushed
   handleMoreData = async () => {
     const response = await search(this.state.query, this.offset)
     const extraData = JSON.parse(response.users)
@@ -63,11 +61,9 @@ class Search extends Component {
       data: [...this.state.data, ...extraData],
       profilePictures: [...this.state.profilePictures, ...profilePictures]
     })
-
-    console.log(response)
-    console.log(profilePictures)
   }
 
+  // Navigates to the user profile
   openUserProfile = (item, index) => {
     this.props.navigation.navigate('TempHeader', {
       userData: item,
@@ -75,7 +71,8 @@ class Search extends Component {
     })
   }
 
-  renderFooter() {
+  // Used to render the footer of the flatlist
+  renderFooter () {
     return (
       <View style={{ flex: 1, alignSelf: 'center', marginTop: 5 }}>
         <TouchableOpacity onPress={this.handleMoreData}>
@@ -94,11 +91,12 @@ class Search extends Component {
     )
   }
 
-  render() {
+  render () {
     if (!this.state.isLoading) {
       return (
         <View style={{ backgroundColor: '#DCD6F7', flex: 1 }}>
           <CustomHeader />
+          {/* Flatlist for the users from the search */}
           <FlatList
             style={{ margin: 10 }}
             data={this.state.data}
@@ -127,6 +125,7 @@ class Search extends Component {
               </TouchableOpacity>
             )}
             keyExtractor={(item) => item.user_id}
+            // Adds the footer to the flatlist
             ListFooterComponent={this.renderFooter.bind(this)}
           />
         </View>

@@ -3,8 +3,10 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { addFriend, getFriends } from './Functions/FriendManagement'
 
+/* This custom button checks if the user is friends with the other user
+and displays a different button depending on the result */
 class FriendButton extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -13,10 +15,13 @@ class FriendButton extends Component {
     }
   }
 
-  componentDidMount() {
+  // When the component is mounted, the functions inside are called
+  componentDidMount () {
     const fetchData = async () => {
       const loggedUserID = await AsyncStorage.getItem('@user_id')
       const friends = await getFriends(loggedUserID)
+
+      // .map is used to get all the userIDs from the array of friends
       const friendIDs = friends.map((user) => {
         return user.user_id
       })
@@ -30,7 +35,7 @@ class FriendButton extends Component {
     fetchData()
   }
 
-  render() {
+  render () {
     if (!this.state.isLoading) {
       if (this.state.isFriends) {
         return (
@@ -50,6 +55,7 @@ class FriendButton extends Component {
       } else {
         return (
           <TouchableOpacity
+            // Add friend function is external function imported
             onPress={() => addFriend(this.props.userID)}
             style={{ marginTop: 5 }}
           >

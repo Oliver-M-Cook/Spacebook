@@ -1,7 +1,6 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native'
 import React, { useEffect, useRef, useState } from 'react'
 import {
-  FlatList,
   Image,
   StyleSheet,
   Text,
@@ -18,6 +17,7 @@ import {
 } from './Functions/UserManagement'
 
 const UpdateProfile = (props) => {
+  // Sets the states used by the screen
   const [profilePicture, setProfilePicture] = useState()
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
@@ -33,12 +33,12 @@ const UpdateProfile = (props) => {
       isInitialMount.current = false
     } else {
       if (userData !== undefined) {
-        console.log(userData)
         setLoading(false)
       }
     }
   }, [userData])
 
+  // Resets the state when called
   const unload = () => {
     setUserData()
     setEmail('')
@@ -60,6 +60,7 @@ const UpdateProfile = (props) => {
 
       setup()
 
+      // When screen is out of focus, the states are reset
       return unload
     }, [])
   )
@@ -83,19 +84,22 @@ const UpdateProfile = (props) => {
   const submitChanges = async () => {
     const formatData = {}
     const newData = [firstname, lastname, email, password]
+    // Array of keys that are used to format the data
     const keys = ['first_name', 'last_name', 'email', 'password']
 
+    // Loops through data and adds it to the json with the key
     newData.forEach((dataPiece, index) => {
       if (dataPiece !== '') {
         formatData[keys[index]] = dataPiece
       }
     })
 
-    console.log(formatData)
-
     const response = await updateUser(userData.user_id, formatData)
 
-    console.log(response)
+    // If successfully updated, navigate to profile
+    if (response.code === 200) {
+      props.navigation.navigate('Profile')
+    }
   }
 
   if (!isLoading) {

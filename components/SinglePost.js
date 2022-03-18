@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import CustomHeader from './CustomHeader'
 
 const SinglePost = (props) => {
+  // States used by the screen
   const [postData, setData] = useState()
   const [isLoading, setLoading] = useState(true)
   const [postText, setText] = useState('')
@@ -25,16 +26,16 @@ const SinglePost = (props) => {
     setText(text)
   }
 
+  // Deletes the post from the server
   const handleDelete = async () => {
     const userID = props.route.params.userID
     const response = await deletePost(userID, postData.id)
     if (response.code === 200) {
       navigation.goBack()
-    } else {
-      console.log(response)
     }
   }
 
+  // Sends new post data to be updated
   const handleUpdate = async () => {
     if (postText.length !== 0) {
       setBlankPost(false)
@@ -46,8 +47,6 @@ const SinglePost = (props) => {
 
       if (response.code === 200) {
         navigation.goBack()
-      } else {
-        console.log(response)
       }
     } else {
       setBlankPost(true)
@@ -58,13 +57,13 @@ const SinglePost = (props) => {
     if (isInitialMount.current) {
       isInitialMount.current = false
     } else {
-      console.log(postData)
       setLoading(false)
     }
   }, [postData])
 
   useFocusEffect(
     React.useCallback(() => {
+      // Sets up the screen so all the data needed is saved to states
       const setup = async () => {
         const userID = props.route.params.userID
         const postID = props.route.params.postID
@@ -75,8 +74,10 @@ const SinglePost = (props) => {
         const dateAndTime = response.timestamp.split('T')
         const time = dateAndTime[1].split('.')[0]
 
+        // Checks if the author is logged in
         const isAuthor = parseInt(loggedUser) === response.author.user_id
 
+        // Only takes data that is needed by the screen
         const postData = {
           id: response.post_id,
           author: response.author,
@@ -103,6 +104,7 @@ const SinglePost = (props) => {
   }
 
   if (!isLoading) {
+    // Allows the text to be changed and deleted if user is the author
     if (postData.isAuthor) {
       return (
         <View style={styles.container}>
@@ -137,6 +139,7 @@ const SinglePost = (props) => {
       )
     } else {
       return (
+        // Only shows the data and cannot be changed
         <View style={styles.container}>
           <CustomHeader />
           <Text style={styles.text}>

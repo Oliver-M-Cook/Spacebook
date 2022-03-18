@@ -1,8 +1,24 @@
 import { Component } from 'react'
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import * as React from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 class MainMenu extends Component {
+  // Checks if the user is logged in
+  componentDidMount () {
+    this.checkLoggedIn()
+  }
+
+  // Checks to see if AsyncStorage is empty before navigating home
+  checkLoggedIn = async () => {
+    const userID = await AsyncStorage.getItem('@user_id')
+    const sessionToken = await AsyncStorage.getItem('@session_token')
+
+    if (userID && sessionToken) {
+      this.props.navigation.navigate('Home')
+    }
+  }
+
   render () {
     return (
       <View style={styles.container}>

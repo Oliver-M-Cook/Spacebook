@@ -3,6 +3,7 @@ import ErrorMessage from '../ErrorMessage'
 
 /* global fetch */
 
+// fetches posts given a userID and returns the JSON response
 export async function getPosts (userID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
@@ -35,6 +36,7 @@ export async function getPosts (userID) {
     })
 }
 
+// sends the post to the server given the request body and userID
 export async function sendPost (postBody, userID) {
   const token = await AsyncStorage.getItem('@session_token')
 
@@ -65,6 +67,7 @@ export async function sendPost (postBody, userID) {
     })
 }
 
+// gets a singular post given userID and postID
 export async function getPost (userID, postID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
@@ -97,6 +100,7 @@ export async function getPost (userID, postID) {
     })
 }
 
+// deletes a post from the server given userID and postID
 export async function deletePost (userID, postID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
@@ -126,6 +130,7 @@ export async function deletePost (userID, postID) {
     })
 }
 
+// updates post using PATCH given userID, postID and request body
 export async function updatePost (userID, postID, postBody) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
@@ -159,6 +164,7 @@ export async function updatePost (userID, postID, postBody) {
     })
 }
 
+// sends a POST to the server that adds a like a post given userID and postID
 export async function likePost (userID, postID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(
@@ -193,6 +199,7 @@ export async function likePost (userID, postID) {
     })
 }
 
+// deletes a like from a post using DELETE given userID and postID
 export async function unlikePost (userID, postID) {
   const token = await AsyncStorage.getItem('@session_token')
   return fetch(

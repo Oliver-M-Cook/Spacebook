@@ -8,14 +8,18 @@ import UpdateProfileStack from './UpdateProfileStack'
 const Drawer = createDrawerNavigator()
 
 class DrawerNavigator extends Component {
-  render() {
+  render () {
     return (
+      // Builds drawer navigator
       <Drawer.Navigator
+        // Adds custom drawer content to the draw
         drawerContent={(props) => <CustomDrawerContent {...props} />}
       >
+        {/* Adds a screen to the drawer that can be navigated to */}
         <Drawer.Screen
           name='Profile'
           component={AuthStackNavigator}
+          // Disables header and gesture becuase a custom header is used
           options={{ headerShown: false, swipeEnabled: false }}
         />
 

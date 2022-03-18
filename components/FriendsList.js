@@ -18,10 +18,12 @@ const RenderFlatListHeader = () => {
 }
 
 const RenderFlatList = (props) => {
+  // Sets the states used by the component
   const [isLoading, setIsLoading] = useState(true)
   const [friendListArray, setFriends] = useState([])
   const [profilePictureArray, setPictures] = useState([])
 
+  // Stops useEffect from running on the initial mount
   const isInitialMount = useRef(true)
   const isInitialMount2 = useRef(true)
 
@@ -54,7 +56,9 @@ const RenderFlatList = (props) => {
   )
 
   const fetchPictures = async () => {
+    // Promise all makes sure that all the promises are fulfilled before moving on
     const pictures = await Promise.all(
+      // Map was used to apply the same function to every element in the array
       friendListArray.map(async (user) => {
         return getProfilePicture(user.user_id)
       })
@@ -62,8 +66,10 @@ const RenderFlatList = (props) => {
     setPictures(pictures)
   }
 
+  // Gives navigation to this screen
   const navigation = useNavigation()
 
+  // Navigates to the screen that shows a single user
   const openUserProfile = (item, index) => {
     navigation.navigate('TempHeader', {
       userData: item,
@@ -76,6 +82,8 @@ const RenderFlatList = (props) => {
       <FlatList
         data={friendListArray}
         renderItem={({ item, index }) => (
+          /* The entire item is in touchable opacity so the item
+          can be pressed to load the user profile */
           <TouchableOpacity
             onPress={() => {
               openUserProfile(item, index)
@@ -87,6 +95,7 @@ const RenderFlatList = (props) => {
               margin: 5
             }}
           >
+            {/* Adds an image to the item to display users profile picture */}
             <Image
               source={{ uri: profilePictureArray[index] }}
               style={{

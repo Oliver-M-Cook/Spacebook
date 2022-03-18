@@ -1,9 +1,7 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import React, { useEffect, useRef, useState } from 'react'
 import {
-  Alert,
   FlatList,
-  Image,
   Modal,
   StyleSheet,
   Text,
@@ -35,6 +33,7 @@ const RenderFlatListHeader = () => {
 }
 
 const PostComponent = (props) => {
+  // States used by the screen
   const [isLoading, setLoading] = useState(true)
   const [isFriends, setFriends] = useState(true)
   const [postText, setPostText] = useState('')
@@ -47,10 +46,13 @@ const PostComponent = (props) => {
   const [refreshDrafts, setDraftRefresh] = useState(true)
   const [blankPost, setBlankPost] = useState(false)
 
+  // Stops useEffect from running on the first mount
   const isInitialMount = useRef(true)
 
+  // Allows navigation on the screen
   const navigation = useNavigation()
 
+  // Only runs when userState is updated
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false
@@ -62,10 +64,12 @@ const PostComponent = (props) => {
   useFocusEffect(
     React.useCallback(() => {
       const setup = async () => {
+        // Checks to see if the user is logged in
         if (props.loggedIn) {
           const user = await AsyncStorage.getItem('@user_id')
           setUser(user)
         } else {
+          // Stops undefined values from being set
           if (props.userID !== undefined) {
             setUser(props.userID)
           }
@@ -74,10 +78,12 @@ const PostComponent = (props) => {
 
       setup()
 
+      // This is called when the screen is out of focus
       return () => setUser()
     }, [props.userID])
   )
 
+  // Fetches posts and filters through response
   const fetchPosts = async () => {
     const response = await getPosts(props.userID)
     if (response.code === 401) {
@@ -86,7 +92,6 @@ const PostComponent = (props) => {
       setFriends(false)
       setLoading(false)
     } else {
-      console.log(response)
       setPosts(response)
       setRefresh(!refresh)
       setLoading(false)
@@ -97,6 +102,7 @@ const PostComponent = (props) => {
     setPostText(text)
   }
 
+  // Opens modal drafts
   const handleModal = async () => {
     const data = await AsyncStorage.getItem('@drafts')
     setDrafts(JSON.parse(data))
@@ -104,17 +110,20 @@ const PostComponent = (props) => {
   }
 
   const handleScheduleTimer = (index, value) => {
-    // setScheduleTimer(value.replace(/[^0-9]/g, ''))
+    // Array is used to hold times becuase multiple drafts can exist
     const tempArray = scheduleTimer
+    // Only accepts integers
     tempArray[index] = value.replace(/[^0-9]/g, '')
     setScheduleTimer(tempArray)
   }
 
+  // Sends post to the server after some validation
   const sendPostText = async () => {
     if (postText.length !== 0) {
       setBlankPost(false)
       const response = await sendPost({ text: postText }, props.userID)
       if (response.code === 401) {
+        // Navigates to main menu if user is unauthorized
         navigation.navigate('Main Menu')
       } else {
         setPostText('')
@@ -125,9 +134,12 @@ const PostComponent = (props) => {
     }
   }
 
+  // Likes and Unlikes Post
   const handleLike = async (userID, postID) => {
+    // Tries to like the post
     const response = await likePost(userID, postID)
 
+    // If it fails then it tries to unlike the post
     if (response.code === 403 || response.code === 500) {
       await unlikePost(userID, postID)
       fetchPosts()
@@ -136,12 +148,15 @@ const PostComponent = (props) => {
     }
   }
 
+  // Adds the draft to async strorage after validation
   const handleDraft = async () => {
     if (postText.length !== 0) {
       setBlankPost(false)
       const newDraft = { text: postText, userID: props.userID }
       const draftsString = await AsyncStorage.getItem('@drafts')
       setPostText('')
+
+      // If array is already created then push new elements, else create the array
       if (draftsString) {
         const draft = JSON.parse(draftsString)
         draft.push(newDraft)
@@ -154,26 +169,34 @@ const PostComponent = (props) => {
     }
   }
 
+  // Closes the modal
   const handleCloseModal = () => {
     setScheduleTimer([])
     setModalVisible(false)
   }
 
   const handleSchedule = async (index) => {
-    console.log(scheduleTimer[index])
     if (index >= 0) {
-      console.log('test')
+      // Gets timer at specific index
       const timer = scheduleTimer[index]
+
+      // Gets the data to be scheduled
       let dataArray = await AsyncStorage.getItem('@drafts')
       dataArray = JSON.parse(dataArray)
       const data = dataArray[index]
+
+      // Formats the data
       const fomattedText = { text: data.text }
+
+      // Sets Timeout so the post is posted after a certain delay
       setTimeout(sendPost, timer * 60 * 1000, fomattedText, data.userID)
+
+      handleDeleteDraft(index)
     }
   }
 
+  // Uses Splice to delete element from array
   const handleDeleteDraft = async (index) => {
-    console.log(index)
     const newDrafts = drafts
     newDrafts.splice(index, 1)
     setDrafts(newDrafts)
@@ -188,6 +211,7 @@ const PostComponent = (props) => {
     )
   }
 
+  // Checks if the user is loggedIn or friends
   if (!isLoading) {
     if (isFriends || props.loggedIn) {
       return (
@@ -200,6 +224,7 @@ const PostComponent = (props) => {
             flex: 1
           }}
         >
+          {/* Creates a modal */}
           <Modal
             animationType='slide'
             transparent
@@ -225,6 +250,7 @@ const PostComponent = (props) => {
                   borderRadius: 20
                 }}
               >
+                {/* Flatlist for the drafts */}
                 <FlatList
                   data={drafts}
                   renderItem={({ item, index }) => (
@@ -277,6 +303,7 @@ const PostComponent = (props) => {
               onChangeText={handlePostText}
               value={postText}
             />
+            {/* Tells the user that they can't enter a blank post */}
             {blankPost && <RenderNoPost />}
             <View
               style={{ flexDirection: 'row', justifyContent: 'space-around' }}
@@ -333,7 +360,9 @@ const PostComponent = (props) => {
               </TouchableOpacity>
             </View>
           </View>
+          {/* Render the header for the flatlist */}
           <RenderFlatListHeader />
+          {/* Flatlist for the posts */}
           <FlatList
             data={posts}
             style={{ flex: 1 }}

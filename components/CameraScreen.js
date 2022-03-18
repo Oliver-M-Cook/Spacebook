@@ -1,19 +1,20 @@
 import React, { useRef } from 'react'
 import { Camera } from 'expo-camera'
-import { useEffect, useState } from 'react/cjs/react.development'
+import { useState } from 'react/cjs/react.development'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { uploadPicture } from './Functions/UserManagement'
-import { set } from 'react-native-reanimated'
 import { useFocusEffect } from '@react-navigation/native'
 import CustomHeader from './CustomHeader'
 
 const CameraScreen = (props) => {
+  // Sets the states that will be used
   const [hasPermission, setHasPermission] = useState(null)
-  const [type, setType] = useState(Camera.Constants.Type.back)
+  const [type] = useState(Camera.Constants.Type.back)
   const [cameraOn, setCameraOn] = useState(false)
 
   const cameraRef = useRef(null)
 
+  // This is called when screen comes into focus
   useFocusEffect(
     React.useCallback(() => {
       const setup = async () => {
@@ -28,6 +29,7 @@ const CameraScreen = (props) => {
     }, [])
   )
 
+  // Takes the picture and sends it to uploadPicture
   const takePicture = async () => {
     if (cameraRef) {
       const options = {
@@ -39,6 +41,7 @@ const CameraScreen = (props) => {
     }
   }
 
+  // Checks if the app has permission to use the camera and renders screen
   if (hasPermission) {
     if (cameraOn) {
       return (
@@ -69,6 +72,7 @@ const CameraScreen = (props) => {
   }
 }
 
+// Style sheet holds all the styles that are used
 const styles = StyleSheet.create({
   container: {
     flex: 1

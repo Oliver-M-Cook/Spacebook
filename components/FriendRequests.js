@@ -14,13 +14,16 @@ import {
 } from './Functions/FriendManagement'
 import TopBar from './TopBar'
 
+// Header used at the top of the flatlist
 const RenderFlatListHeader = () => {
   return (
     <Text style={{ fontSize: 25, fontWeight: 'bold' }}>Friend Requests</Text>
   )
 }
 
+// Renders the flatlist to the screen
 const RenderFlatList = (props) => {
+  // Sets the states to be used by the component
   const [isLoading, setIsLoading] = useState(true)
   const [friendRequestArray, setArray] = useState([])
   const [refresh, setRefresh] = useState(true)
@@ -37,11 +40,14 @@ const RenderFlatList = (props) => {
 
   const removeElement = (index) => {
     const tempArray = friendRequestArray
+    // Uses splice to remove element from array
     tempArray.splice(index, 1)
     setArray(tempArray)
+    // Inverts refresh so flatlist re-renders with new data
     setRefresh(!refresh)
   }
 
+  // Sets up the screen when the screen comes into focus
   useFocusEffect(
     React.useCallback(() => {
       getFriendRequests().then((responseJson) => {
@@ -55,6 +61,7 @@ const RenderFlatList = (props) => {
     return (
       <FlatList
         data={friendRequestArray}
+        // RenderItem loops through and creates an item from the data
         renderItem={({ item, index }) => (
           <View
             style={{
@@ -104,6 +111,7 @@ const RenderFlatList = (props) => {
         )}
         ListHeaderComponent={RenderFlatListHeader}
         StickyHeaderComponent={[0]}
+        // Key extractor sets a unique key for each item
         keyExtractor={(item) => item.user_id}
         extraData={refresh}
       />

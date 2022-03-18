@@ -13,13 +13,16 @@ import { getProfilePicture } from './Functions/UserManagement'
 import { search } from './Functions/FriendManagement'
 
 const TopBar = (props) => {
+  // States used by the screen
   const [query, setQuery] = useState('')
   const [userProfilePicture, setPicture] = useState('')
   const [isLoading, setLoading] = useState(true)
 
   const navigation = useNavigation()
+
   const isInitialMount = useRef(true)
 
+  // Opens the drawer when called
   const handleSideNav = () => {
     navigation.openDrawer()
   }
@@ -28,6 +31,7 @@ const TopBar = (props) => {
     setQuery(text)
   }
 
+  // Calls search function and navigates to search screen with the response
   const handleSearch = async () => {
     const response = await search(query)
     if (response.code === 401) {
@@ -51,6 +55,7 @@ const TopBar = (props) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      // Sets all the data up for the screen to use
       const setup = async () => {
         const userID = await AsyncStorage.getItem('@user_id')
         const profilePicture = await getProfilePicture(userID)
@@ -66,6 +71,7 @@ const TopBar = (props) => {
     }, [])
   )
 
+  // Only renders if the data is loaded
   if (!isLoading) {
     return (
       <View style={styles.container}>

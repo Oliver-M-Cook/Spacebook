@@ -1,19 +1,25 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { useEffect, useRef, useState } from 'react'
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
-import { set } from 'react-native-reanimated'
+import React, { useState } from 'react'
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import CustomHeader from './CustomHeader'
 import { signUp } from './Functions/UserManagement'
 
 const SignUp = (props) => {
+  // States to be used by the screen
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [showFirstname, setShowFirstname] = useState(true)
-  const [showLastname, setShowLastname] = useState(true)
-  const [showEmail, setShowEmail] = useState(true)
-  const [showPassword, setShowPassword] = useState(true)
+  const [showFirstname, setShowFirstname] = useState(false)
+  const [showLastname, setShowLastname] = useState(false)
+  const [showEmail, setShowEmail] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const navigation = useNavigation()
 
@@ -33,14 +39,17 @@ const SignUp = (props) => {
     setPassword(password)
   }
 
+  // Sends details after validation
   const sendSignUp = async () => {
     let showFirstname
     let showLastname
     let showEmail
     let showPassword
 
+    // Tenary statements to check what the user has entered
     firstname.length === 0 ? (showFirstname = true) : (showLastname = false)
     lastname.length === 0 ? (showLastname = true) : (showLastname = false)
+    // Uses RegEx to check the email is valid
     email.match(/\S+@\S+\.\S+/) ? (showEmail = false) : (showEmail = true)
     password.length <= 5 ? (showPassword = true) : (showPassword = false)
 
@@ -49,6 +58,7 @@ const SignUp = (props) => {
     setShowEmail(showEmail)
     setShowPassword(showPassword)
 
+    // Only sends data if all data passes validation
     if (!showFirstname && !showLastname && !showEmail && !showPassword) {
       const postBody = {
         first_name: firstname,
@@ -107,6 +117,7 @@ const SignUp = (props) => {
           onChangeText={handleFirstname}
           value={firstname}
         />
+        {/* Only shows if validation failed */}
         {showFirstname && <RenderFirstname />}
         <TextInput
           placeholder='Lastname...'
@@ -114,6 +125,7 @@ const SignUp = (props) => {
           onChangeText={handleLastname}
           value={lastname}
         />
+        {/* Only shows if validation failed */}
         {showLastname && <RenderLastname />}
         <TextInput
           placeholder='Email...'
@@ -121,6 +133,7 @@ const SignUp = (props) => {
           onChangeText={handleEmail}
           value={email}
         />
+        {/* Only shows if validation failed */}
         {showEmail && <RenderEmail />}
         <TextInput
           placeholder='Password...'
@@ -129,8 +142,13 @@ const SignUp = (props) => {
           value={password}
           secureTextEntry
         />
+        {/* Only shows if validation failed */}
         {showPassword && <RenderPassword />}
-        <Button title='Sign Up' onPress={sendSignUp} />
+        <TouchableOpacity>
+          <Text style={styles.button} onPress={sendSignUp}>
+            Sign Up
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -142,6 +160,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1
+  },
+
+  button: {
+    backgroundColor: '#B4869F',
+    padding: 5,
+    borderRadius: 10,
+    fontSize: 20
   },
 
   textInput: {

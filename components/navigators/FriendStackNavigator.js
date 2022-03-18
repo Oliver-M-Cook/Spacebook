@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Component } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import FriendsList from '../FriendsList'
-import FriendRequests from '../FRusingFunctional'
+import FriendRequests from '../FriendRequests'
 import Search from '../Search'
 import OtherUserProfile from '../OtherUserProfile'
 import SinglePost from '../SinglePost'
@@ -10,12 +10,15 @@ import SinglePost from '../SinglePost'
 const Stack = createNativeStackNavigator()
 
 class FriendStackNavigator extends Component {
-  render() {
+  render () {
     return (
+      // Builds stack for the friend screens
       <Stack.Navigator>
+        {/* Adds a screen to the stack that can be navigated to */}
         <Stack.Screen
           name='Friend Requests'
           component={FriendRequests}
+          // Disables header and gesture becuase a custom header is used
           options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen
